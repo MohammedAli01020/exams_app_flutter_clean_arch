@@ -24,13 +24,3 @@ Future<void> main() async {
   );
 }
 
-
-
-// final pref = di.sl<SharedPreferences>();
-// String initRoutes = Routes.initialRoute;
-//
-//
-// if (pref.getString(AppStrings.cachedCurrentUser) != null) {
-//   initRoutes = Routes.examsRoute;
-//   Constants.currentUser = CurrentUserModel.fromJson(jsonDecode(pref.getString(AppStrings.cachedCurrentUser)!));
-// }

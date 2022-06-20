@@ -15,6 +15,9 @@ abstract class UserExamRemoteDataSource {
   Future<List<UserExamModel>> getAllUsersExam();
 
   Future<UserExamModel> addUserExam( UserExamParam userExamParam);
+
+  Future<UserExamModel> findUserExamByUserIdAndExamId(int userId, int examId);
+
 }
 
 
@@ -27,43 +30,82 @@ class UserExamRemoteDataSourceImpl implements UserExamRemoteDataSource {
 
   @override
   Future<UserExamModel> addUserExam(UserExamParam userExamParam) async {
-    final response = await apiConsumer
-        .post(EndPoints.addUserExam, body: {
-      "userId": userExamParam.userId,
-      "examId": userExamParam.examId,
-      "score": userExamParam.score,
-      "fullScore": userExamParam.fullScore,
 
-      "correct": userExamParam.correct,
-      "incorrect": userExamParam.incorrect,
-      "notAttempted": userExamParam.notAttempted,
-      "submittedDate": userExamParam.submittedDate,
+    try {
 
-    });
+      final response = await apiConsumer
+          .post(EndPoints.addUserExam, body: {
+        "userId": userExamParam.userId,
+        "examId": userExamParam.examId,
+        "score": userExamParam.score,
+        "fullScore": userExamParam.fullScore,
 
-    return UserExamModel.fromJson(response);
+        "correct": userExamParam.correct,
+        "incorrect": userExamParam.incorrect,
+        "notAttempted": userExamParam.notAttempted,
+        "submittedDate": userExamParam.submittedDate,
+
+      });
+
+      return UserExamModel.fromJson(response);
+    } catch (e) {
+      throw const ServerException();
+    }
+
   }
 
   @override
   Future<List<UserExamModel>> getAllUsersExam() async {
 
-    final response =
-        await apiConsumer.get(EndPoints.allUserExam);
+
+    try {
+      final response =
+      await apiConsumer.get(EndPoints.allUserExam);
 
 
       return List<UserExamModel>.from(
           response.map((x) => UserExamModel.fromJson(x)));
+    } catch (e) {
+      throw const ServerException();
+    }
+
 
   }
 
   @override
   Future<List<UserExamModel>> getUserExamByUserId(int userId) async {
-    final response =
-        await apiConsumer.get(EndPoints.allUserExamByUserId + userId.toString());
+    try {
 
 
-    return List<UserExamModel>.from(
-        response.map((x) => UserExamModel.fromJson(x)));
+      final response =
+      await apiConsumer.get(EndPoints.allUserExamByUserId + userId.toString());
+
+
+      return List<UserExamModel>.from(
+          response.map((x) => UserExamModel.fromJson(x)));
+    } catch (e) {
+      throw const ServerException();
+    }
+
+
+  }
+
+  @override
+  Future<UserExamModel> findUserExamByUserIdAndExamId(int userId, int examId) async {
+
+
+    try {
+      final response =
+          await apiConsumer.get(EndPoints.findUserExamByUserAndExam, queryParameters: {
+            "userId": userId,
+             "examId": examId
+      });
+
+      return UserExamModel.fromJson(response);
+
+    } catch (e) {
+      throw const ServerException();
+    }
   }
 
 }

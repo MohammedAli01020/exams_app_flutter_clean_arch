@@ -18,8 +18,11 @@ class LoginRepositoryImpl implements LoginRepository {
   final LoginRemoteDataSource loginRemoteDataSource;
   final NetworkInfo networkInfo;
 
-  LoginRepositoryImpl(
-      {required this.localDataSource, required this.loginRemoteDataSource, required this.networkInfo, });
+  LoginRepositoryImpl({
+    required this.localDataSource,
+    required this.loginRemoteDataSource,
+    required this.networkInfo,
+  });
 
   @override
   Future<Either<Failure, CurrentUser>> login(LoginParam loginParam) async {
@@ -35,6 +38,8 @@ class LoginRepositoryImpl implements LoginRepository {
       return Right(currentUserModel);
     } on ServerException {
       return Left(ServerFailure());
+    } catch (e) {
+      return Left(ServerFailure());
     }
   }
 
@@ -46,52 +51,42 @@ class LoginRepositoryImpl implements LoginRepository {
 
   @override
   Future<Either<Failure, CurrentUser>> getSavedCredentials() async {
-
-    if (!await networkInfo.isConnected()) {
-      return Left(ServerFailure());
-    }
-
     try {
-      
-      CurrentUserModel currentUserModel = await localDataSource.getCurrentUser();
+      CurrentUserModel currentUserModel =
+          await localDataSource.getCurrentUser();
 
       return Right(currentUserModel);
     } on CacheException {
       return Left(CacheFailure());
+    } catch (e) {
+      return Left(CacheFailure());
     }
-    
   }
 
   @override
-  Future<Either<Failure, void>> sendEmailToUser(String username, String email) async {
-
-
+  Future<Either<Failure, void>> sendEmailToUser(
+      String username, String email) async {
     if (!await networkInfo.isConnected()) {
       return Left(ServerFailure());
     }
 
     try {
-      final response = await loginRemoteDataSource.sendEmailToUser(username, email);
+      final response =
+          await loginRemoteDataSource.sendEmailToUser(username, email);
 
       return Right(response);
-
     } on ServerException {
-
       debugPrint("failure  here");
       return Left(ServerFailure());
     } catch (e) {
-
       debugPrint(e.toString());
 
       return Left(ServerFailure());
     }
-
-
   }
 
   @override
   Future<Either<Failure, UserDetails>> getUserByEmail(String username) async {
-
     if (!await networkInfo.isConnected()) {
       return Left(ServerFailure());
     }
@@ -100,8 +95,42 @@ class LoginRepositoryImpl implements LoginRepository {
       final response = await loginRemoteDataSource.getUserByEmail(username);
 
       return Right(response);
-
     } on ServerException {
+      return Left(ServerFailure());
+    } catch (e) {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> cacheCurrentUser(
+      CurrentUser currentUser) async {
+    try {
+      final response = await localDataSource.cacheCurrentUser(currentUser);
+
+      return Right(response);
+    } on CacheException {
+      return Left(CacheFailure());
+    } catch (e) {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserDetails>> changePasswordByUsername(
+      String username, String newPassword) async {
+    if (!await networkInfo.isConnected()) {
+      return Left(ServerFailure());
+    }
+
+    try {
+      final response = await loginRemoteDataSource.changePasswordByUsername(
+          username, newPassword);
+
+      return Right(response);
+    } on ServerException {
+      return Left(ServerFailure());
+    } catch (e) {
       return Left(ServerFailure());
     }
   }

@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:exams_app/core/utils/constants.dart';
 import 'package:exams_app/features/exams/data/models/user_exams_data.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:meta/meta.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/utils/app_strings.dart';
@@ -21,6 +20,9 @@ class LoginCubit extends Cubit<LoginState> {
 
   static LoginCubit get(context) => BlocProvider.of(context);
 
+
+
+  int currentState = 0;
 
   Future<void> login(LoginParam loginParam) async {
 
@@ -39,10 +41,8 @@ class LoginCubit extends Cubit<LoginState> {
 
     Either<Failure, CurrentUser> response = await loginUseCases.getSavedCredentials();
 
-
     emit(response.fold((failure) => GetSavedCredentialError(msg: _mapFailureToMsg(failure)),
             (currentUser) => EndGetSavedCredential(currentUser: currentUser)));
-
 
   }
 
@@ -54,7 +54,9 @@ class LoginCubit extends Cubit<LoginState> {
 
 
       if (currentOtp == userOtp) {
+        currentState ++;
         emit(CheckingOtpSuccess());
+
       } else {
         emit(CheckingOtpError(msg: "CheckingOtpError"));
       }
@@ -79,9 +81,7 @@ class LoginCubit extends Cubit<LoginState> {
     if (response.isRight()) {
       emit(GettingUserByEmailSuccess());
 
-
       emit(SendingEmailToUser());
-
 
       Either<Failure, void> response2 =
       await loginUseCases.sendEmailToUSer(username, email);
@@ -89,6 +89,7 @@ class LoginCubit extends Cubit<LoginState> {
 
       if (response2.isRight()) {
         debugPrint("is Right");
+        currentState ++;
       }
 
       emit(response2.fold((failure) => SendingEmailToUserError(msg: _mapFailureToMsg(failure)),
@@ -98,6 +99,18 @@ class LoginCubit extends Cubit<LoginState> {
       emit(GettingUserByEmailError(msg: "GettingUserByEmailError"));
     }
 
+
+  }
+
+  Future<void> updatePasswordByUsername(String username, String newPassword) async {
+
+    emit(UpdatingPassword());
+    Either<Failure, UserDetails> response =
+        await loginUseCases.changePasswordByUsername(username, newPassword);
+
+
+    emit(response.fold((l) => UpdatingPasswordError(msg: _mapFailureToMsg(l)),
+            (r) => UpdatingPasswordSuccess()));
 
   }
 

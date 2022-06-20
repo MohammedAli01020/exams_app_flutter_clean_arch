@@ -3,6 +3,7 @@ import 'package:exams_app/features/exams/presentation/screens/exam_questions_stu
 import 'package:exams_app/features/exams/presentation/screens/exams_results_screen.dart';
 import 'package:exams_app/features/exams/presentation/screens/exams_screen.dart';
 import 'package:exams_app/features/login/presentation/screens/forget_password.dart';
+import 'package:exams_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:exams_app/injection_container.dart' as di;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +14,7 @@ import '../../features/exams/presentation/cubit/question_cubit.dart';
 import '../../features/exams/presentation/cubit/user_exam_cubit.dart';
 import '../../features/login/presentation/cubit/login_cubit.dart';
 import '../../features/login/presentation/screens/login_screen.dart';
+import '../../features/profile/presentation/cubit/profile_cubit.dart';
 
 class Routes {
   static const String initialRoute = '/';
@@ -24,6 +26,7 @@ class Routes {
 
   static const String forgetPasswordRoute = '/forgetPasswordRoute';
 
+  static const String profileRoute = '/profileRoute';
 }
 
 class AppRoutes {
@@ -48,8 +51,6 @@ class AppRoutes {
 
       case Routes.examsRoute:
         return MaterialPageRoute(builder: ((context) {
-
-
           return BlocProvider(
               create: (BuildContext context) {
                 return di.sl<ExamsCubit>();
@@ -61,18 +62,15 @@ class AppRoutes {
         final exam = routeSettings.arguments as Exam;
 
         return MaterialPageRoute(builder: ((context) {
-
           return MultiBlocProvider(
             providers: [
               BlocProvider(create: (context) => di.sl<QuestionCubit>()),
               BlocProvider(create: (context) => di.sl<UserExamCubit>()),
             ],
-            child: ExamQuestionsAdminScreen(exam: exam,),
+            child: ExamQuestionsAdminScreen(
+              exam: exam,
+            ),
           );
-
-
-
-
         }));
 
       case Routes.examsQuestionStudentRoute:
@@ -84,34 +82,42 @@ class AppRoutes {
               BlocProvider(create: (context) => di.sl<QuestionCubit>()),
               BlocProvider(create: (context) => di.sl<UserExamCubit>()),
             ],
-            child: ExamsQuestionsStudentScreen(exam: exam,),
+            child: ExamsQuestionsStudentScreen(
+              exam: exam,
+            ),
           );
-
-
         }));
 
       case Routes.examsResultsRoute:
         return MaterialPageRoute(builder: ((context) {
-
           return BlocProvider(
               create: (BuildContext context) {
                 return di.sl<UserExamCubit>();
               },
               child: const ExamsResultsScreen());
-
         }));
-
 
       case Routes.forgetPasswordRoute:
         return MaterialPageRoute(builder: ((context) {
-
           return BlocProvider(
               create: (BuildContext context) {
                 return di.sl<LoginCubit>();
               },
               child: const ForgetPassword());
-
         }));
+
+      case Routes.profileRoute:
+        return MaterialPageRoute(
+          builder: (context) {
+            final userId = routeSettings.arguments as int;
+
+            return BlocProvider(
+                create: (BuildContext context) {
+                  return di.sl<ProfileCubit>();
+                },
+                child: ProfileScreen(userId: userId));
+          },
+        );
 
       default:
         return undefinedRoute();

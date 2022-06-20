@@ -26,22 +26,28 @@ class ExamsQuestionsStudentScreen extends StatefulWidget {
 class ExamsQuestionsStudentScreenState
     extends State<ExamsQuestionsStudentScreen> {
   void _loadQuestion() {
+    BlocProvider.of<QuestionCubit>(context).reset();
+
     BlocProvider.of<QuestionCubit>(context)
         .getAllQuestionsByExamId(widget.exam.examId);
-    BlocProvider.of<QuestionCubit>(context).reset();
+  }
+
+  void _loadUserExam(int userId, int examId) {
+    BlocProvider.of<UserExamCubit>(context)
+        .getUserExamByUserIdAndExamId(userId, examId);
   }
 
   @override
   void initState() {
     super.initState();
     _loadQuestion();
+    _loadUserExam(Constants.currentUser!.userId, widget.exam.examId);
   }
 
   var boardController = PageController();
   bool isLast = false;
   bool completed = false;
   bool submitting = false;
-
 
   @override
   void dispose() {
@@ -70,6 +76,7 @@ class ExamsQuestionsStudentScreenState
 
           if (state is LoadingQuestionsError) {
             return ErrorItemWidget(
+              msg: state.msg,
               onPress: () {
                 _loadQuestion();
               },
@@ -78,18 +85,20 @@ class ExamsQuestionsStudentScreenState
 
           if (state is LoadingQuestionsSuccess) {
             if (cubit.questions.isEmpty) {
-              return const Padding(
-                padding: EdgeInsets.all(8.0),
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Center(
                     child: Text(
                   "Empty, no questions added yest , you can start adding by clicking plus button",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0,
+                      color: AppColors.primary),
                 )),
               );
             }
           }
-
 
           if (submitting) {
             return Center(
@@ -103,7 +112,7 @@ class ExamsQuestionsStudentScreenState
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Score: ${cubit.quizState.correct.length.toString()} / ${cubit.quizState.incorrect.length.toString()}",
+                    "Score: ${cubit.quizState.correct.length.toString()} / ${cubit.questions.length.toString()}",
                     style: TextStyle(fontSize: 25.0, color: AppColors.primary),
                   ),
                   const SizedBox(
@@ -140,6 +149,48 @@ class ExamsQuestionsStudentScreenState
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                BlocBuilder<UserExamCubit, UserExamState>(
+                  builder: (context, state) {
+                    if (state is LoadingUserExamByUserAndExam) {
+                      return const LinearProgressIndicator();
+                    }
+
+                    if (state is LoadingUserExamByUserAndExamSuccess) {
+                      return Container(
+                        alignment: AlignmentDirectional.center,
+                        decoration: BoxDecoration(
+                          // borderRadius: BorderRadius.circular(20.0),
+                          color: AppColors.red,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.info,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(
+                              width: 16.0,
+                            ),
+                            Flexible(
+                                child: Text(
+                              "You have solved this exam before with score ( ${state.userExam.correct} / ${state.userExam.fullScore} )",
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            )),
+                          ],
+                        ),
+                      );
+                    }
+
+                    if (state is LoadingUserExamByUserAndExamError) {
+                      return Text(state.msg);
+                    }
+
+                    return const LinearProgressIndicator();
+                  },
+                ),
                 Expanded(
                   child: PageView.builder(
                     physics: const NeverScrollableScrollPhysics(),
@@ -202,28 +253,28 @@ class ExamsQuestionsStudentScreenState
                   child: FloatingActionButton(
                     onPressed: () async {
                       if (isLast) {
-
-
                         setState(() {
                           submitting = true;
                         });
 
-                        await BlocProvider.of<UserExamCubit>(context).addUserExam(
-                          UserExamParam(userId: Constants.currentUser!.userId,
-                              examId: widget.exam.examId,
-                              score: cubit.quizState.correct.length, fullScore: cubit.questions.length,
-                              correct: cubit.quizState.correct.length, incorrect: cubit.quizState.incorrect.length,
-                              notAttempted: cubit.questions.length - (cubit.quizState.correct.length + cubit.quizState.incorrect.length),
-                              submittedDate: DateTime.now().millisecondsSinceEpoch,)
-                        );
-
-
+                        await BlocProvider.of<UserExamCubit>(context)
+                            .addUserExam(UserExamParam(
+                          userId: Constants.currentUser!.userId,
+                          examId: widget.exam.examId,
+                          score: cubit.quizState.correct.length,
+                          fullScore: cubit.questions.length,
+                          correct: cubit.quizState.correct.length,
+                          incorrect: cubit.quizState.incorrect.length,
+                          notAttempted: cubit.questions.length -
+                              (cubit.quizState.correct.length +
+                                  cubit.quizState.incorrect.length),
+                          submittedDate: DateTime.now().millisecondsSinceEpoch,
+                        ));
 
                         setState(() {
                           submitting = false;
                           completed = true;
                         });
-
                       } else {
                         boardController.nextPage(
                             duration: const Duration(

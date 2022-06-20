@@ -133,3 +133,21 @@ class CheckingOtpError extends LoginState {
   @override
   List<Object?> get props => [msg];
 }
+
+
+
+
+class UpdatingPassword extends LoginState{}
+
+class UpdatingPasswordError extends LoginState{
+  final String msg;
+
+  UpdatingPasswordError({required this.msg});
+
+
+  @override
+  List<Object?> get props => [msg];
+
+}
+
+class UpdatingPasswordSuccess extends LoginState{}

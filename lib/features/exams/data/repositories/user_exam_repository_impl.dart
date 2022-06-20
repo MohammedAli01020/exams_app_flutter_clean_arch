@@ -67,4 +67,22 @@ class UserExamRepositoryImpl implements UserExamRepository {
       return Left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, UserExam>> getUserExamByUserIdAndExamId(
+      int userId, int examId) async {
+    if (!await networkInfo.isConnected()) {
+      return Left(ServerFailure());
+    }
+
+    try {
+      final response = await userExamRemoteDataSource
+          .findUserExamByUserIdAndExamId(userId, examId);
+      return Right(response);
+    } on ServerException {
+      return Left(ServerFailure());
+    } catch (e) {
+      return Left(ServerFailure());
+    }
+  }
 }

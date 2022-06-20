@@ -58,6 +58,7 @@ class ExamQuestionsAdminScreenState extends State<ExamQuestionsAdminScreen> {
 
           if (state is LoadingQuestionsError) {
             return ErrorItemWidget(
+              msg: state.msg,
               onPress: () {
                 _loadQuestion();
               },
@@ -66,13 +67,13 @@ class ExamQuestionsAdminScreenState extends State<ExamQuestionsAdminScreen> {
 
           if (state is LoadingQuestionsSuccess) {
             if (cubit.questions.isEmpty) {
-              return const Padding(
-                padding: EdgeInsets.all(8.0),
+              return  Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Center(
                     child: Text(
                   "Empty, no questions added yest , you can start adding by clicking plus button",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: AppColors.primary),
                 )),
               );
             }

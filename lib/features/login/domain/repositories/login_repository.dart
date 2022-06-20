@@ -16,4 +16,10 @@ abstract class LoginRepository {
 
   Future<Either<Failure, UserDetails>> getUserByEmail(String username);
 
+  Future<Either<Failure, void>> cacheCurrentUser(CurrentUser currentUser);
+
+  Future<Either<Failure, UserDetails>> changePasswordByUsername(String username, String newPassword);
+
+
+
 }

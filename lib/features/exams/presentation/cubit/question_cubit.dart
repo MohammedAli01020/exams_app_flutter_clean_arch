@@ -16,8 +16,9 @@ part 'question_state.dart';
 class QuestionCubit extends Cubit<QuestionState> {
   final QuestionUseCases questionUseCases;
 
-
   List<Question> questions = [];
+
+  QuizState quizState = QuizState.initial();
 
   QuestionCubit({required this.questionUseCases}) : super(QuestionInitial());
 
@@ -25,8 +26,8 @@ class QuestionCubit extends Cubit<QuestionState> {
 
   Future<void> addQuestionToExam(
       int examId, QuestionParam questionParam) async {
-    emit(QuestionCreating());
 
+    emit(QuestionCreating());
 
     Either<Failure, Question> response =
         await questionUseCases.addQuestion(examId, questionParam);
@@ -43,7 +44,6 @@ class QuestionCubit extends Cubit<QuestionState> {
   Future<void> getAllQuestionsByExamId(
       int examId) async {
 
-
     emit(LoadingQuestions());
 
     Either<Failure, List<Question>> response =
@@ -59,7 +59,7 @@ class QuestionCubit extends Cubit<QuestionState> {
   }
 
 
-  QuizState quizState = QuizState.initial();
+
 
   void submitAnswer(Question currentQuestion, String answer) {
     if (quizState.answered) return;

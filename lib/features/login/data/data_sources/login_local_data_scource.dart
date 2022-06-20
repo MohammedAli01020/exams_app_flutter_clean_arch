@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 
+import 'package:exams_app/features/login/domain/entities/current_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/error/exceptions.dart';
@@ -10,7 +11,7 @@ import '../models/current_user_model.dart';
 abstract class LoginLocalDataSource {
 
   Future<CurrentUserModel> getCurrentUser();
-  Future<void> cacheCurrentUser(CurrentUserModel currentUserModel);
+  Future<void> cacheCurrentUser(CurrentUser currentUser);
   Future<void> removeCacheCurrentUser();
 }
 
@@ -37,9 +38,9 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
   }
 
   @override
-  Future<void> cacheCurrentUser(CurrentUserModel currentUserModel) {
+  Future<void> cacheCurrentUser(CurrentUser currentUser) {
     return sharedPreferences.setString(
-        AppStrings.cachedCurrentUser, json.encode(currentUserModel));
+        AppStrings.cachedCurrentUser, json.encode(currentUser));
   }
 
   @override

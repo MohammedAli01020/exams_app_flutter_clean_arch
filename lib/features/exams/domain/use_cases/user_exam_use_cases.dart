@@ -10,6 +10,10 @@ abstract class UserExamUserCases {
   Future<Either<Failure,  List<UserExam>>> getAllUsersExam();
 
   Future<Either<Failure, UserExam>> addUserExam(UserExamParam userExamParam);
+
+
+  Future<Either<Failure,  UserExam>> getUserExamByUserIdAndExamId(int userId, int examId);
+
 }
 
 
@@ -33,6 +37,11 @@ class UserExamUserCasesImpl implements UserExamUserCases {
   @override
   Future<Either<Failure, List<UserExam>>> getUserExamByUserId(int userId) {
     return userExamRepository.getUserExamByUserId(userId);
+  }
+
+  @override
+  Future<Either<Failure, UserExam>> getUserExamByUserIdAndExamId(int userId, int examId) {
+    return userExamRepository.getUserExamByUserIdAndExamId(userId, examId);
   }
 
 

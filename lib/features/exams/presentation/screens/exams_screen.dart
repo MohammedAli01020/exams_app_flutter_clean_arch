@@ -50,6 +50,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
         if (state is LoadingRefreshExamsError) {
 
           return ErrorItemWidget(
+            msg: state.msg,
             onPress: () {
               _getExams(refresh: true);
             },
@@ -75,25 +76,28 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
         }
 
-        return ListView.builder(
-          controller: _controller,
-          itemBuilder: (context, index) {
-            final currentExam = examsCubit.exams[index];
+        return Scrollbar(
+          child: ListView.builder(
+            physics: const BouncingScrollPhysics(),
+            controller: _controller,
+            itemBuilder: (context, index) {
+              final currentExam = examsCubit.exams[index];
 
-            return ExamListItem(
-              exam: currentExam,
-              onTap: () {
-                if (Constants.currentUser!.role == AppStrings.adminRole) {
-                  Navigator.pushNamed(context, Routes.examsQuestionsAdminRoute,
-                      arguments: currentExam);
-                } else {
-                  Navigator.pushNamed(
-                      context, Routes.examsQuestionStudentRoute, arguments: currentExam );
-                }
-              },
-            );
-          },
-          itemCount: examsCubit.exams.length,
+              return ExamListItem(
+                exam: currentExam,
+                onTap: () {
+                  if (Constants.currentUser!.role == AppStrings.adminRole) {
+                    Navigator.pushNamed(context, Routes.examsQuestionsAdminRoute,
+                        arguments: currentExam);
+                  } else {
+                    Navigator.pushNamed(
+                        context, Routes.examsQuestionStudentRoute, arguments: currentExam );
+                  }
+                },
+              );
+            },
+            itemCount: examsCubit.exams.length,
+          ),
         );
       },
     );

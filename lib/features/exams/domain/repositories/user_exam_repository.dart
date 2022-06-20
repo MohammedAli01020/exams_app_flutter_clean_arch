@@ -13,4 +13,6 @@ abstract class UserExamRepository {
 
   Future<Either<Failure, UserExam>> addUserExam(
      UserExamParam userExamParam);
+
+  Future<Either<Failure,  UserExam>> getUserExamByUserIdAndExamId(int userId, int examId);
 }

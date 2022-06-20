@@ -43,8 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
         if (state is LoginError) {
           Constants.showErrorDialog(context: context,
               msg: state.msg);
-
         }
+
 
         if (state is LoginIsLoaded) {
           Navigator.pushNamedAndRemoveUntil(context, Routes.examsRoute, (route) => false);
@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       builder: (context, state) {
 
-        if (state is LoginIsLoading) {
+        if (state is LoginIsLoading || state is StartGetSavedCredential) {
           return Center(
             child: SpinKitFadingCircle(
               color: AppColors.primary,
@@ -104,10 +104,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               isVisible = !isVisible;
                             });
                           },
-                          icon: !isVisible
+                          icon: isVisible
                               ?  Icon(Icons.visibility_off_outlined, color: AppColors.primary)
                               :  Icon(Icons.visibility_outlined, color: AppColors.primary)),
-                      isPassword: isVisible,
+                      isPassword: !isVisible,
                       controller: passwordController,
                       validator: (v) {
                         if (v!.isEmpty) {
@@ -134,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextButton(onPressed: () {
 
                       Constants.showToast(msg: "not implemented yet");
-                      // Navigator.pushNamed(context, Routes.forgetPasswordRoute);
+                      Navigator.pushNamed(context, Routes.forgetPasswordRoute);
 
                     }, child: const Text("forget password?"))
 

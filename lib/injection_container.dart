@@ -14,6 +14,10 @@ import 'package:exams_app/features/exams/domain/use_cases/user_exam_use_cases.da
 import 'package:exams_app/features/exams/presentation/cubit/exams_cubit.dart';
 import 'package:exams_app/features/exams/presentation/cubit/question_cubit.dart';
 import 'package:exams_app/features/exams/presentation/cubit/user_exam_cubit.dart';
+import 'package:exams_app/features/profile/data/data_sources/profile_remote_data_source.dart';
+import 'package:exams_app/features/profile/data/repositories/profile_respository_impl.dart';
+import 'package:exams_app/features/profile/domain/repositories/profile_repository.dart';
+import 'package:exams_app/features/profile/domain/use_cases/profile_use_cases.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,6 +32,7 @@ import 'features/login/data/repositories/login_repository_impl.dart';
 import 'features/login/domain/repositories/login_repository.dart';
 import 'features/login/domain/use_cases/login_use_cases.dart';
 import 'features/login/presentation/cubit/login_cubit.dart';
+import 'features/profile/presentation/cubit/profile_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -41,6 +46,11 @@ Future<void> init() async {
   sl.registerFactory(() => QuestionCubit(questionUseCases: sl()));
   sl.registerFactory(() => UserExamCubit(userExamUserCases: sl()));
 
+  sl.registerFactory(() => ProfileCubit(profileUseCases: sl(),
+      loginUseCases: sl()));
+
+
+
   // Use cases
 
   sl.registerLazySingleton(() => LoginUseCases(loginRepository: sl()));
@@ -51,6 +61,10 @@ Future<void> init() async {
       () => QuestionUseCasesImpl(questionRepository: sl()));
   sl.registerLazySingleton<UserExamUserCases>(
       () => UserExamUserCasesImpl(userExamRepository: sl()));
+
+
+  sl.registerLazySingleton<ProfileUseCases>(
+          () => ProfileUseCasesImpl(profileRepository: sl()));
 
   // Repository
 
@@ -69,6 +83,10 @@ Future<void> init() async {
   sl.registerLazySingleton<UserExamRepository>(() => UserExamRepositoryImpl(
       userExamRemoteDataSource: sl(), networkInfo: sl()));
 
+
+  sl.registerLazySingleton<ProfileRepository>(() => ProfileRepositoryImpl(
+      profileRemoteDataSource: sl(), networkInfo: sl()));
+
   // Data Sources
 
   sl.registerLazySingleton<LoginLocalDataSource>(
@@ -82,11 +100,13 @@ Future<void> init() async {
 
   sl.registerLazySingleton<QuestionRemoteDataSource>(
       () => QuestionRemoteDataSourceImpl(
-            apiConsumer: sl(),
-          ));
+            apiConsumer: sl(),));
 
   sl.registerLazySingleton<UserExamRemoteDataSource>(
       () => UserExamRemoteDataSourceImpl(apiConsumer: sl()));
+
+  sl.registerLazySingleton<ProfileRemoteDataSource>(
+          () => ProfileRemoteDataSourceImpl(apiConsumer: sl()));
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(

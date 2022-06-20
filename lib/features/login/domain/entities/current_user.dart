@@ -10,10 +10,22 @@ class CurrentUser extends Equatable {
     required this.userId,
   });
 
-  final  String role;
+
+  final String role;
   final String token;
-  final  String username;
+  final String username;
   final int userId;
+
+  CurrentUser copyWith({String? username}) {
+
+    return CurrentUser(
+        role: role,
+        token: token,
+        username: username ?? this.username,
+        userId: userId);
+
+}
+
 
   @override
   List<Object?> get props =>

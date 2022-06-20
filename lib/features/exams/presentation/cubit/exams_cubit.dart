@@ -73,7 +73,7 @@ class ExamsCubit extends Cubit<ExamsState> {
         throw const ServerException();
       });
 
-      exams.add(exam);
+      exams.insert(0, exam);
     }
 
     emit(response.fold(

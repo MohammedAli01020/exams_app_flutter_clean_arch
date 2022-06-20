@@ -1,10 +1,9 @@
-import 'package:exams_app/core/network/network_info.dart';
 import 'package:exams_app/features/exams/data/models/exam_model.dart';
 import 'package:exams_app/features/exams/domain/use_cases/exam_use_cases.dart';
 
 import '../../../../core/api/api_consumer.dart';
 import '../../../../core/api/end_points.dart';
-import '../../../../core/error/exceptions.dart';
+
 
 abstract class ExamsRemoteDataSource {
   Future<Map> getAllExams(ExamPageParam examPageParam, int pageNumber);

@@ -2,6 +2,7 @@
 //
 //     final userExam = userExamFromJson(jsonString);
 
+import 'package:equatable/equatable.dart';
 import 'dart:convert';
 
 import 'package:exams_app/features/exams/data/models/user_exam_model.dart';
@@ -21,13 +22,13 @@ class Exam {
   int examId;
   String examTitle;
   int creationDateTime;
-  UserDetails userDetails;
+  UserDetailsModel userDetails;
 
   factory Exam.fromJson(Map<String, dynamic> json) => Exam(
     examId: json["examId"],
     examTitle: json["examTitle"],
     creationDateTime: json["creationDateTime"],
-    userDetails: UserDetails.fromJson(json["userDetails"]),
+    userDetails: UserDetailsModel.fromJson(json["userDetails"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -38,8 +39,8 @@ class Exam {
   };
 }
 
-class UserDetails {
-  UserDetails({
+class UserDetails extends Equatable{
+  const UserDetails({
     required this.userId,
     required this.username,
     required this.password,
@@ -47,27 +48,24 @@ class UserDetails {
     required this.roles,
   });
 
-  int userId;
-  String username;
-  String password;
-  int age;
-  List<Role> roles;
+  final int userId;
+  final String username;
+  final String password;
+  final int age;
+  final List<Role> roles;
 
-  factory UserDetails.fromJson(Map<String, dynamic> json) => UserDetails(
-    userId: json["userId"],
-    username: json["username"],
-    password: json["password"],
-    age: json["age"],
-    roles: List<Role>.from(json["roles"].map((x) => Role.fromJson(x))),
-  );
 
-  Map<String, dynamic> toJson() => {
-    "userId": userId,
-    "username": username,
-    "password": password,
-    "age": age,
-    "roles": List<dynamic>.from(roles.map((x) => x.toJson())),
-  };
+
+  @override
+  List<Object?> get props => [
+  userId,
+   username,
+   password,
+   age,
+  roles
+
+
+  ];
 }
 
 class Role {
@@ -108,4 +106,29 @@ class UserExamId {
     "userId": userId,
     "examId": examId,
   };
+}
+
+
+class UserDetailsModel extends UserDetails {
+
+  const UserDetailsModel({required int userId, required String username, required String password, required int age, required List<Role> roles}) : super(userId: userId, username: username, password: password, age: age, roles: roles);
+
+
+  factory UserDetailsModel.fromJson(Map<String, dynamic> json) => UserDetailsModel(
+    userId: json["userId"],
+    username: json["username"],
+    password: json["password"],
+    age: json["age"],
+    roles: List<Role>.from(json["roles"].map((x) => Role.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "userId": userId,
+    "username": username,
+    "password": password,
+    "age": age,
+    "roles": List<dynamic>.from(roles.map((x) => x.toJson())),
+  };
+
+
 }

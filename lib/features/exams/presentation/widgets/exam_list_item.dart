@@ -11,6 +11,44 @@ class ExamListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    return InkWell(
+      onTap: () {
+        onTap();
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+        padding: const EdgeInsets.all(8.0),
+
+        decoration: BoxDecoration(
+
+          borderRadius: BorderRadius.circular(20.0),
+          gradient: LinearGradient(
+            colors: [AppColors.hint, AppColors.primary],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomLeft
+          )
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              exam.examTitle.toString(),
+              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+            const SizedBox(height: 16.0,),
+            Text("created by: " + exam.userDetails.username,
+              style: const TextStyle(color: Colors.white, fontSize: 16),),
+            const SizedBox(height: 16.0,),
+            Text("created at: " +
+                Constants.dateFromMilliSeconds(
+                    exam.creationDateTime), style:const TextStyle(color: Colors.white, fontSize: 16),)
+          ],
+        ),
+      ),
+    );
+
     return InkWell(
       onTap: () {
         onTap();
@@ -37,5 +75,7 @@ class ExamListItem extends StatelessWidget {
         ),
       ),
     );
+
+
   }
 }

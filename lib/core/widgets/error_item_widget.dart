@@ -1,12 +1,12 @@
 
-
 import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
 import 'custom_button_widget.dart';
 
 class ErrorItemWidget extends StatelessWidget {
   final VoidCallback? onPress;
-  const ErrorItemWidget({Key? key, this.onPress}) : super(key: key);
+  final String msg;
+  const ErrorItemWidget({Key? key, this.onPress, this.msg = "something wrong"}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +23,9 @@ class ErrorItemWidget extends StatelessWidget {
         ),
         Container(
           margin: const EdgeInsets.symmetric(vertical: 12),
-          child: const Text(
-            "something went wrong",
-            style: TextStyle(
+          child: Text(
+            msg,
+            style: const TextStyle(
                 color: Colors.black, fontSize: 20, fontWeight: FontWeight.w700),
           ),
         ),

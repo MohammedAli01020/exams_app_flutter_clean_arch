@@ -1,17 +1,13 @@
 import 'package:exams_app/core/utils/app_strings.dart';
 import 'package:exams_app/core/utils/constants.dart';
-import 'package:exams_app/core/widgets/custom_button_widget.dart';
-import 'package:exams_app/features/exams/domain/use_cases/user_exam_use_cases.dart';
-import 'package:exams_app/features/exams/presentation/cubit/question_cubit.dart';
 import 'package:exams_app/features/exams/presentation/cubit/user_exam_cubit.dart';
+import 'package:exams_app/features/exams/presentation/widgets/exam_result_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widgets/error_item_widget.dart';
-import '../../domain/entities/exam.dart';
-import '../widgets/answer_card.dart';
 
 class ExamsResultsScreen extends StatefulWidget {
   const ExamsResultsScreen({Key? key}) : super(key: key);
@@ -71,6 +67,7 @@ class _ExamsResultsScreenState extends State<ExamsResultsScreen> {
 
           if (state is LoadingUsersExamError) {
             return ErrorItemWidget(
+              msg: state.msg,
               onPress: () {
                 if (Constants.currentUser!.role == AppStrings.adminRole) {
                   _loadAllUserExam();
@@ -83,53 +80,28 @@ class _ExamsResultsScreenState extends State<ExamsResultsScreen> {
 
 
           if (state is LoadingUsersExamSuccess) {
-            return ListView.builder(itemBuilder: (context, index) {
 
 
+            if (state.usersExamList.isEmpty) {
 
-              return Card(
-                child: Column(
-
-                  children: [
-
-                    Text(state.usersExamList[index].exam.examTitle, style: const TextStyle(color: Colors.black)),
-
-                    const Divider(),
-
-                    Text("correct: " +state.usersExamList[index].correct.toString(),
-                      style: TextStyle(color: AppColors.green),),
-                    Text("incorrect: " + state.usersExamList[index].incorrect.toString(),
-                        style: TextStyle(color: AppColors.red)
-                    ),
-
-                    Text("score: ${state.usersExamList[index].correct} / ${state.usersExamList[index].fullScore} ",
-                         style : const TextStyle(color: Colors.black)),
-
-
-                    const Divider(),
-
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(state.usersExamList[index].userDetails.username.toString(),
-                          style: const TextStyle(color: Colors.black, fontSize: 18.0),),
-
-
-
-                        Text("teacher: " + state.usersExamList[index].exam.userDetails.username.toString(),
-                          style: const TextStyle(color: Colors.black, fontSize: 18.0),),
-                        Text("submitted at: " + Constants.dateFromMilliSeconds(state.usersExamList[index].submittedDate),
-                            style: const TextStyle(color: Colors.black, fontSize: 18.0)),
-                      ],
-                    )
-
-
-
-                  ],
-                ),
+              return  Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                    child: Text(
+                      "Empty, you did not solve any exams yes!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: AppColors.primary),
+                    )),
               );
 
+            }
+
+            return ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+
+              final currentUserExam =  state.usersExamList[index];
+              return ExamResultListItem(currentUserExam: currentUserExam,);
 
             },
 

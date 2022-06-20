@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:exams_app/core/error/failures.dart';
 import 'package:exams_app/core/utils/app_strings.dart';
 import 'package:exams_app/features/exams/data/models/user_exams_data.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,8 +18,9 @@ abstract class LoginRemoteDataSource {
 
   Future<void> sendEmailToUser(String username, String email);
 
-  Future<UserDetails> getUserByEmail(String username);
+  Future<UserDetailsModel> getUserByEmail(String username);
 
+  Future<UserDetailsModel> changePasswordByUsername(String username, String newPassword);
 
 }
 
@@ -67,11 +69,35 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
   }
 
   @override
-  Future<UserDetails> getUserByEmail(String username) async {
+  Future<UserDetailsModel> getUserByEmail(String username) async {
 
-    final response = await apiConsumer.get(EndPoints.findUserByEmail + username);
+    try {
 
-    return UserDetails.fromJson(response);
+      final response = await apiConsumer.get(EndPoints.findUserByEmail + username);
+
+      return UserDetailsModel.fromJson(response);
+    } catch (e) {
+      debugPrint(e.toString());
+      throw ServerFailure();
+
+    }
+
+  }
+
+  @override
+  Future<UserDetailsModel> changePasswordByUsername(String username, String newPassword) async {
+
+    try {
+      final response = await apiConsumer.put(EndPoints.updatePasswordByUsername + username,
+      queryParameters: {
+        "newPassword": newPassword
+      });
+      return UserDetailsModel.fromJson(response);
+
+    } catch (e) {
+      debugPrint(e.toString());
+      throw ServerFailure();
+    }
   }
 
   
