@@ -23,6 +23,9 @@ class ExamsCubit extends Cubit<ExamsState> {
   int examsTotalElements = 0;
   late int examsPagesCount;
 
+
+  int currentDeletingExamItemIndex = -1;
+
   ExamsCubit({required this.examUseCases}) : super(ExamsInitial());
 
   static ExamsCubit get(context) => BlocProvider.of(context);
@@ -81,16 +84,19 @@ class ExamsCubit extends Cubit<ExamsState> {
         (exam) => ExamCreated()));
   }
 
-  Future<void> deleteExam(int examId) async {
+  Future<void> deleteExam(int examId, int examListItemIndex) async {
+
+    currentDeletingExamItemIndex = examListItemIndex;
+
     emit(ExamDeleting());
 
     Either<Failure, void> response = await examUseCases.deleteExam(examId);
 
+    currentDeletingExamItemIndex = -1;
+
     if (response is! Failure) {
       try {
-        exams.removeWhere((element) {
-          return element.examId == examId;
-        });
+        exams.removeAt(examListItemIndex);
       } catch (e) {
         throw Exception();
       }

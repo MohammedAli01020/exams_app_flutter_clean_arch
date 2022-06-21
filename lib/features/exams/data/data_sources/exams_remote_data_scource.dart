@@ -1,5 +1,6 @@
 import 'package:exams_app/features/exams/data/models/exam_model.dart';
 import 'package:exams_app/features/exams/domain/use_cases/exam_use_cases.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../../../core/api/api_consumer.dart';
 import '../../../../core/api/end_points.dart';
@@ -23,10 +24,17 @@ class ExamsRemoteDataSourceImpl implements ExamsRemoteDataSource {
   @override
   Future<void> deleteExam(int examId) async {
 
-    final response =
-    await apiConsumer.delete(EndPoints.getAllExams + examId.toString());
+    try {
+      final response =
+      await apiConsumer.delete(EndPoints.getAllExams + examId.toString());
 
-    return response;
+      return response;
+
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+
   }
 
   @override

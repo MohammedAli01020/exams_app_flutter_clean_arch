@@ -53,6 +53,14 @@ class _ExamsScreenState extends State<ExamsScreen> {
         if (state is CreatingExamError) {
           Constants.showErrorDialog(context: context, msg: "CreatingExamError");
         }
+
+
+        if (state is ExamDeletingError) {
+          Constants.showErrorDialog(
+              context: context, msg: "ExamDeletingError");
+        }
+
+
       },
       builder: (context, state) {
         final examsCubit = ExamsCubit.get(context);
@@ -66,7 +74,8 @@ class _ExamsScreenState extends State<ExamsScreen> {
           );
         }
 
-        if (state is LoadingRefreshExams || state is CreatingExam) {
+        if (state is LoadingRefreshExams
+            || state is CreatingExam) {
           return Center(
             child: SpinKitFadingCircle(
               color: AppColors.primary,
@@ -74,7 +83,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
           );
         }
 
-        if (state is LoadingRefreshExamsCompleted) {
+        if (state is LoadingRefreshExamsCompleted ||
+            state is ExamCreated ||
+            state is ExamDeleted) {
           if (examsCubit.exams.isEmpty) {
             return const Padding(
               padding: EdgeInsets.all(8.0),
@@ -88,39 +99,32 @@ class _ExamsScreenState extends State<ExamsScreen> {
           }
         }
 
-        if (state is LoadingRefreshExamsCompleted ||
-            state is LoadingRefreshExamsCompleted ||
-            state is ExamCreated) {
-          return Scrollbar(
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              controller: _controller,
-              itemBuilder: (context, index) {
-                final currentExam = examsCubit.exams[index];
+        return Scrollbar(
+          child: ListView.builder(
+            physics: const BouncingScrollPhysics(),
+            controller: _controller,
+            itemBuilder: (context, index) {
+              final currentExam = examsCubit.exams[index];
 
-                return ExamListItem(
-                  exam: currentExam,
-                  onTap: () {
-                    if (Constants.currentUser!.role == AppStrings.adminRole) {
-                      Navigator.pushNamed(
-                          context, Routes.examsQuestionsAdminRoute,
-                          arguments: currentExam);
-                    } else {
-                      Navigator.pushNamed(
-                          context, Routes.examsQuestionStudentRoute,
-                          arguments: currentExam);
-                    }
-                  },
-                );
-              },
-              itemCount: examsCubit.exams.length,
-            ),
-          );
-        }
+              return ExamListItem(
+                exam: currentExam,
+                onTap: () {
+                  if (Constants.currentUser!.role == AppStrings.adminRole) {
+                    Navigator.pushNamed(
+                        context, Routes.examsQuestionsAdminRoute,
+                        arguments: currentExam);
+                  } else {
+                    Navigator.pushNamed(
+                        context, Routes.examsQuestionStudentRoute,
+                        arguments: currentExam);
+                  }
+                }, examItemIndex: index, onDeleteButtonClicked: () {
 
-        return Center(
-          child: SpinKitFadingCircle(
-            color: AppColors.primary,
+                examsCubit.deleteExam(currentExam.examId, index);
+              }, deletingItemIndex: examsCubit.currentDeletingExamItemIndex,
+              );
+            },
+            itemCount: examsCubit.exams.length,
           ),
         );
       },

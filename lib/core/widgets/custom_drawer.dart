@@ -20,6 +20,7 @@ class CustomDrawer extends StatelessWidget {
             Text("role: " +  Constants.currentUser!.role.toString(), style: const TextStyle(fontSize: 20.0)),
                 accountEmail: Text(Constants.currentUser!.username, style: const TextStyle(fontSize: 20.0),)),
             onTap: () {
+              Navigator.pop(context);
               Navigator.pushNamed(context, Routes.profileRoute, arguments: Constants.currentUser!.userId);
             },
           ),
