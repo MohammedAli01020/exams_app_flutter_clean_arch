@@ -1,3 +1,4 @@
+import 'package:exams_app/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/custom_button_widget.dart';
@@ -8,10 +9,11 @@ class ProfileBottomSheet extends StatelessWidget {
   final String hint;
   final VoidCallback onUpdatePressedCallback;
   final GlobalKey<FormState> globalKey;
+  final TextInputType textInputType;
 
 
   const ProfileBottomSheet({Key? key, required this.controller, required this.hint,
-    required this.onUpdatePressedCallback, required this.globalKey}) : super(key: key);
+    required this.onUpdatePressedCallback, required this.globalKey, required this.textInputType}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +40,14 @@ class ProfileBottomSheet extends StatelessWidget {
                 CustomEditText(
                     hint: hint,
                     controller: controller,
-                    inputType:
-                    TextInputType.emailAddress),
+                    inputType: textInputType,
+                  validator: (v) {
+                    if (v!.isEmpty) {
+                      return AppStrings.required;
+                    }
+                    return null;
+                  },
+                ),
                 const SizedBox(
                   height: 16.0,
                 ),

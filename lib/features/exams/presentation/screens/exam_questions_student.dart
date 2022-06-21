@@ -185,7 +185,7 @@ class ExamsQuestionsStudentScreenState
                     }
 
                     if (state is LoadingUserExamByUserAndExamError) {
-                      return Text(state.msg);
+                      return const SizedBox(height: 0.0, width: 0.0);
                     }
 
                     return const LinearProgressIndicator();

@@ -28,8 +28,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isVisible = false;
 
 
-
-
   Widget _buildBodyContent() {
 
     return BlocConsumer<LoginCubit, LoginState>(
@@ -185,5 +183,12 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: _buildBodyContent()
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
   }
 }

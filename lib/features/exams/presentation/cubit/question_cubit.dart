@@ -18,6 +18,8 @@ class QuestionCubit extends Cubit<QuestionState> {
 
   List<Question> questions = [];
 
+  int deletingQuestionIndex = -1;
+
   QuizState quizState = QuizState.initial();
 
   QuestionCubit({required this.questionUseCases}) : super(QuestionInitial());
@@ -60,6 +62,27 @@ class QuestionCubit extends Cubit<QuestionState> {
 
 
 
+
+  Future<void> deleteQuestion(int questionId, int questionIndex) async {
+
+    deletingQuestionIndex = questionIndex;
+    emit(DeletingQuestion());
+
+    Either<Failure, void> response =
+        await questionUseCases.deleteQuestion(questionId);
+
+    if (response.isRight()) {
+      questions.removeAt(questionIndex);
+    }
+
+
+    deletingQuestionIndex = -1;
+
+    emit(response.fold(
+            (failure) => DeletingQuestionError(msg: _mapFailureToMsg(failure)),
+            (questionsData) => DeletingQuestionSuccess()));
+
+  }
 
   void submitAnswer(Question currentQuestion, String answer) {
     if (quizState.answered) return;

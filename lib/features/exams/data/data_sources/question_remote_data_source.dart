@@ -1,4 +1,5 @@
 import 'package:exams_app/features/exams/data/models/question_model.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../../../core/api/api_consumer.dart';
 import '../../../../core/api/end_points.dart';
@@ -32,9 +33,21 @@ class QuestionRemoteDataSourceImpl implements QuestionRemoteDataSource {
   }
 
   @override
-  Future<void> deleteQuestion(int questionId) {
-    // TODO: implement deleteQuestion
-    throw UnimplementedError();
+  Future<void> deleteQuestion(int questionId) async {
+
+
+    try {
+      final response = await apiConsumer.delete(EndPoints.deleteQuestion + questionId.toString());
+
+      return response;
+    } catch (e) {
+
+      debugPrint(e.toString());
+
+    }
+
+
+
   }
 
   @override

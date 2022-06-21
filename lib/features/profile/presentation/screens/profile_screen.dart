@@ -43,6 +43,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _getUserProfile(widget.userId);
   }
 
+
+  @override
+  void dispose() {
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,6 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               hint: 'type new password',
                               controller: passwordController,
                               globalKey: formKeyFirst,
+                              textInputType: TextInputType.visiblePassword,
 
                             );
 
@@ -200,6 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               hint: 'type new email',
                               controller: emailController,
                               globalKey: formKeySecond,
+                              textInputType: TextInputType.emailAddress,
 
                             );
 

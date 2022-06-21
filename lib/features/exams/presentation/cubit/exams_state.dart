@@ -18,7 +18,6 @@ class LoadingRefreshExams extends ExamsState {}
 
 class LoadNoMore extends ExamsState {}
 
-
 class ExamsLoaded extends ExamsState {}
 
 class ExamsLoadingError extends ExamsState {

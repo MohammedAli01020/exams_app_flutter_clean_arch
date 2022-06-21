@@ -52,3 +52,17 @@ class StartReset extends QuestionState {}
 
 class EndReset extends QuestionState {}
 
+
+
+class DeletingQuestion extends QuestionState {}
+
+class DeletingQuestionError extends QuestionState {
+  final String msg;
+
+  DeletingQuestionError({required this.msg});
+
+  @override
+  List<Object?> get props => [msg];
+
+}
+class DeletingQuestionSuccess extends QuestionState {}

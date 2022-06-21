@@ -9,25 +9,22 @@ import '../../../../core/error/exceptions.dart';
 import '../../../../core/network/network_info.dart';
 
 class QuestionRepositoryImpl implements QuestionRepository {
-
-
   final QuestionRemoteDataSource questionRemoteDataSource;
   final NetworkInfo networkInfo;
 
-  QuestionRepositoryImpl({required this.questionRemoteDataSource,
-    required this.networkInfo});
-
+  QuestionRepositoryImpl(
+      {required this.questionRemoteDataSource, required this.networkInfo});
 
   @override
-  Future<Either<Failure, Question>> addQuestion(int examId, QuestionParam questionParam) async {
-
-
+  Future<Either<Failure, Question>> addQuestion(
+      int examId, QuestionParam questionParam) async {
     if (!await networkInfo.isConnected()) {
       return Left(ServerFailure());
     }
 
     try {
-      final response = await questionRemoteDataSource.addQuestion(examId, questionParam);
+      final response =
+          await questionRemoteDataSource.addQuestion(examId, questionParam);
       return Right(response);
     } on ServerException {
       return Left(ServerFailure());
@@ -37,20 +34,16 @@ class QuestionRepositoryImpl implements QuestionRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteQuestion(int questionId) {
-    // TODO: implement deleteQuestion
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, List<Question>>> getQuestionByExamId(int examId) async {
+  Future<Either<Failure, void>> deleteQuestion(int questionId) async {
 
     if (!await networkInfo.isConnected()) {
       return Left(ServerFailure());
     }
 
     try {
-      final response = await  questionRemoteDataSource.getQuestionByExamId(examId);
+      final response =
+          await questionRemoteDataSource.deleteQuestion(questionId);
+
       return Right(response);
     } on ServerException {
       return Left(ServerFailure());
@@ -59,6 +52,21 @@ class QuestionRepositoryImpl implements QuestionRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, List<Question>>> getQuestionByExamId(
+      int examId) async {
+    if (!await networkInfo.isConnected()) {
+      return Left(ServerFailure());
+    }
 
-
+    try {
+      final response =
+          await questionRemoteDataSource.getQuestionByExamId(examId);
+      return Right(response);
+    } on ServerException {
+      return Left(ServerFailure());
+    } catch (e) {
+      return Left(ServerFailure());
+    }
+  }
 }

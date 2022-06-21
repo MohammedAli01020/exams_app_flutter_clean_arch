@@ -13,6 +13,10 @@ class EndPoints {
 
   static const String addQuestion = '${baseUrl}api/questions/add/';
   static const String allQuestion = '${baseUrl}api/questions/all';
+  static const String deleteQuestion = '${baseUrl}api/questions/delete/';
+
+
+
 
   // user exams
   static const String addUserExam = '${baseUrl}api/userExam/add';
