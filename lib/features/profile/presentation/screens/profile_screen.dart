@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../../../config/locale/app_localizations.dart';
 import '../../../../core/widgets/error_item_widget.dart';
 import '../widgets/profile_bottom_sheet.dart';
 
@@ -55,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profile Screen"),
+        title: Text(AppLocalizations.of(context)!.translate('profile')!),
       ),
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
@@ -172,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 }
 
                               },
-                              hint: 'type new password',
+                              hint: AppLocalizations.of(context)!.translate('type_new_password')!,
                               controller: passwordController,
                               globalKey: formKeyFirst,
                               textInputType: TextInputType.visiblePassword,
@@ -181,7 +182,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                           });
                     },
-                    title: const Text("Change password"),
+                    title: Text(AppLocalizations.of(context)!.translate('change_pass')!),
                     trailing: const Icon(Icons.arrow_forward_ios),
                   ),
                 ),
@@ -206,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 }
 
                               },
-                              hint: 'type new email',
+                              hint: AppLocalizations.of(context)!.translate('type_new_email')!,
                               controller: emailController,
                               globalKey: formKeySecond,
                               textInputType: TextInputType.emailAddress,
@@ -216,7 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                           });
                     },
-                    title: const Text("Change username"),
+                    title: Text(AppLocalizations.of(context)!.translate('change_email')!),
                     subtitle: Text(cubit.userDetails!.username.toString()),
                     trailing: const Icon(Icons.arrow_forward_ios),
                   ),

@@ -1,0 +1,69 @@
+{
+  "app_name": "Exams App",
+  "opps": "OPPS !",
+  "please_check_your_internet_connection_and_try_again": "Please check your Internet Connection and try again",
+  "try_again": "Try Again",
+  "welcome": "Welcome",
+  "ok": "Ok",
+  "cancel": "Cancel",
+  "something_went_wrong": "Something Went Wrong",
+  "reload_screen": "Reload Screen",
+  "want_to_logout": "Do you want to logout ?",
+  "logout": "Logout",
+  "exams_results": "Exams results",
+
+  "role": "role: ",
+  "exams": "Exams",
+
+
+  "solved_before": "You have solved this exam before wit score ",
+  "score": "Score: ",
+  "correct": "Correct: ",
+  "incorrect": "Incorrect: ",
+  "not_answered": "Not answered",
+  "go_to_home": "Go to home",
+
+  "student": "Student: ",
+  "teacher": "Teacher: ",
+  "submitted_at": "Submitted at: ",
+  "my_exams_results": "My Exams Results",
+  "students_exams_results": "Students Exam Results",
+
+
+  "email": "Email",
+  "password": "Password",
+  "login" : "Login",
+  "forget_password": "Forget password ?",
+  "next": "Next",
+  "reset_password": "Reset Password",
+  "enter_email": "Enter your email",
+  "enter_otp_code": "Enter otp code",
+  "enter_new_password": "Enter new password",
+
+  "required": "Required",
+
+
+  "add": "Add",
+  "exam_title": "Exam title",
+
+  "question_title": "Question title",
+  "correct_choice": "Choice 1 ( correct choice )",
+
+  "choice_2": "Choice 2",
+  "choice_3": "Choice 3",
+  "choice_4": "Choice 4",
+  "choice_5": "Choice 5",
+  "choice_6": "Choice 6",
+  "the_correct_choice" : "The correct choice ",
+  "empty_questions": "Empty, no questions added yet , you can start adding by clicking plus button",
+  "deleting" : "deleting...",
+
+  "created_at": "Created at: ",
+  "created_by": "Created by: ",
+  "profile": "Profile",
+  "change_pass": "Change password",
+  "change_email": "Change email",
+  "type_new_password": "Type new password",
+  "update": "update",
+  "type_new_email": "Type new email"
+}

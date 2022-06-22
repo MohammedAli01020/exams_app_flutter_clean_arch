@@ -1,0 +1,72 @@
+{
+  "app_name": "اسألة",
+  "opps": "عفواً !",
+  "please_check_your_internet_connection_and_try_again": "من فضلك أفحص اتصالك بالانترنت ، وأعد المحاولة",
+  "try_again": "حاول مجدداَ",
+  "welcome": "أهلًا بك",
+  "ok": "موافق",
+  "cancel": "إلغاء",
+  "something_went_wrong": "حدث خطأ ما",
+  "reload_screen": "إعادة تحميل الصفحة",
+  "want_to_logout": "هل تريد تسجيل الخروج؟",
+  "logout": "تسجيل خروج",
+
+  "exams_results": "نتائج الامتحانات",
+
+  "role": "الدور: ",
+  "exams": "الامتحانات",
+
+
+  "solved_before": "لقد انهيت هذا الامتحان من قبل بنتيجة ",
+  "score": "النتجة: ",
+  "correct": "صحيحة: ",
+  "incorrect": "خاطئة: ",
+  "not_answered": "لم تجاوبها: ",
+  "go_to_home": "الي الرئيسية",
+
+
+  "student": "الطالب: ",
+  "teacher": "المدرس: ",
+  "submitted_at": "تاريخ الارسال: ",
+  "my_exams_results": "نتائج امتحاناتي",
+  "students_exams_results": "نتائح امتحانات الطلبة",
+
+
+  "email": "الايمل",
+  "password": "كلمة السر",
+  "login" : "دخول",
+  "forget_password": "نسيت كلمة السر ؟",
+  "next": "التالي",
+  "reset_password": "استعادة كلمة السر",
+  "enter_email": "ادخل الايميل المسجل",
+  "enter_otp_code": "ادخول كود التحقق",
+  "enter_new_password": "ادخل كلمة السر الجديدة",
+  "required": "مطلوب",
+
+
+  "add": "إضافة",
+  "exam_title": "اسم الامتحان",
+
+  "question_title": "السؤال",
+  "correct_choice": "الاختيار 1 (الاجابة الصحيحة)",
+
+  "choice_2": "الاختيار 2",
+  "choice_3": "الاختيار 3",
+  "choice_4": "الاختيار 4",
+  "choice_5": "الاختيار 5",
+  "choice_6": "الاختيار 6",
+
+  "the_correct_choice" : "الاجابة الصحيحة ",
+  "empty_questions": "لا توجد اي اسألة, يمكنك الاضافة بالضغط علي علامة (+) بالاسفل",
+  "deleting" : "جاري الحذف...",
+
+  "created_at": "بتاريخ: ",
+  "created_by": "بواسطة: ",
+  "profile": "الصحفة الشخصية",
+  "change_pass": "تغير كلمة السر",
+  "change_email": "تغير الايميل",
+  "type_new_password": "ادخل كلمة السر الجديدة",
+  "update": "تحديث",
+  "type_new_email": "ادخل الايميل الجديد"
+
+}

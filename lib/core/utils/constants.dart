@@ -2,6 +2,7 @@ import 'package:exams_app/features/login/domain/entities/current_user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 import 'app_colors.dart';
 
@@ -45,8 +46,9 @@ class Constants {
   static String dateFromMilliSeconds(int dateMillis) {
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(dateMillis);
 
-    // DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
-    return dateTime.toString();
+    String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(dateTime);
+
+    return formattedDate;
   }
 
   static CurrentUser? currentUser;

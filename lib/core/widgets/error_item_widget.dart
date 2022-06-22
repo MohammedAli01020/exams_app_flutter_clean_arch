@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import '../../config/locale/app_localizations.dart';
 import '../utils/app_colors.dart';
 import 'custom_button_widget.dart';
 
@@ -30,13 +31,13 @@ class ErrorItemWidget extends StatelessWidget {
           ),
         ),
         Text(
-          "try again",
+          AppLocalizations.of(context)!.translate('try_again')!,
           style: TextStyle(
               color: AppColors.hint, fontSize: 18, fontWeight: FontWeight.w500),
         ),
 
 
-        CustomButtonWidget(onPress: onPress, text: 'reload screen',)
+        CustomButtonWidget(onPress: onPress, text: AppLocalizations.of(context)!.translate('reload_screen')!,)
 
       ],
     );

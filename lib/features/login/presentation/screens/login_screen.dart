@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../../../config/locale/app_localizations.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widgets/custom_button_widget.dart';
 import '../../domain/use_cases/login_use_cases.dart';
+import '../cubit/lang/locale_cubit.dart';
 import '../cubit/login_cubit.dart';
 
 
@@ -71,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     CustomEditText(
-                      hint: "username",
+                      hint: AppLocalizations.of(context)!.translate('email')!,
                       prefixIcon :  Icon(Icons.email_outlined, color: AppColors.primary,),
                       suffixIcon: usernameController.text.isEmpty
                           ? null
@@ -83,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: usernameController,
                       validator: (v) {
                         if (v!.isEmpty) {
-                          return "required";
+                          return AppLocalizations.of(context)!.translate('required')!;
                         }
 
                         return null;
@@ -92,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     const SizedBox(height: 16.0,),
                     CustomEditText(
-                      hint: "password",
+                      hint: AppLocalizations.of(context)!.translate('password')!,
 
                       prefixIcon: Icon(Icons.lock_outline, color: AppColors.primary,),
                       suffixIcon: IconButton(
@@ -109,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: passwordController,
                       validator: (v) {
                         if (v!.isEmpty) {
-                          return "required";
+                          return AppLocalizations.of(context)!.translate('required')!;
                         }
 
                         return null;
@@ -117,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 16.0,),
                     CustomButtonWidget(
-                      text: "login",
+                      text: AppLocalizations.of(context)!.translate('login')!,
                       onPress: () {
                         if (formKey.currentState!.validate()) {
                           BlocProvider.of<LoginCubit>(context).login(
@@ -131,10 +133,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 16.0,),
                     TextButton(onPressed: () {
 
-                      Constants.showToast(msg: "not implemented yet");
                       Navigator.pushNamed(context, Routes.forgetPasswordRoute);
 
-                    }, child: const Text("forget password?"))
+                    }, child: Text(AppLocalizations.of(context)!.translate('forget_password')!, style: const TextStyle(fontSize: 18.0),))
 
 
                   ],
@@ -179,6 +180,21 @@ class _LoginScreenState extends State<LoginScreen> {
             ]
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.translate_outlined,
+              color: AppColors.primary,
+            ),
+            onPressed: () {
+              if (AppLocalizations.of(context)!.isEnLocale) {
+                BlocProvider.of<LocaleCubit>(context).toArabic();
+              } else {
+                BlocProvider.of<LocaleCubit>(context).toEnglish();
+              }
+            },
+          ),
+        ],
 
       ),
       body: _buildBodyContent()

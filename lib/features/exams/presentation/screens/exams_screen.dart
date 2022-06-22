@@ -4,15 +4,18 @@ import 'package:exams_app/core/widgets/custom_drawer.dart';
 import 'package:exams_app/core/widgets/error_item_widget.dart';
 import 'package:exams_app/features/exams/domain/use_cases/exam_use_cases.dart';
 import 'package:exams_app/features/exams/presentation/cubit/exams_cubit.dart';
+import 'package:exams_app/features/exams/presentation/widgets/default_empty_widget.dart';
 import 'package:exams_app/features/exams/presentation/widgets/exam_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../../../config/locale/app_localizations.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/widgets/custom_button_widget.dart';
 import '../../../../core/widgets/custom_edit_text.dart';
+import '../../../login/presentation/cubit/lang/locale_cubit.dart';
 import '../../../login/presentation/cubit/login_cubit.dart';
 
 class ExamsScreen extends StatefulWidget {
@@ -44,7 +47,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
         _getExams(refresh: false);
       }
     });
-
   }
 
   Widget _buildBodyContent() {
@@ -54,13 +56,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
           Constants.showErrorDialog(context: context, msg: "CreatingExamError");
         }
 
-
         if (state is ExamDeletingError) {
-          Constants.showErrorDialog(
-              context: context, msg: "ExamDeletingError");
+          Constants.showErrorDialog(context: context, msg: "ExamDeletingError");
         }
-
-
       },
       builder: (context, state) {
         final examsCubit = ExamsCubit.get(context);
@@ -74,8 +72,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
           );
         }
 
-        if (state is LoadingRefreshExams
-            || state is CreatingExam) {
+        if (state is LoadingRefreshExams || state is CreatingExam) {
           return Center(
             child: SpinKitFadingCircle(
               color: AppColors.primary,
@@ -85,17 +82,11 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
         if (state is LoadingRefreshExamsCompleted ||
             state is ExamCreated ||
-            state is ExamDeleted) {
+            state is ExamDeleted ) {
           if (examsCubit.exams.isEmpty) {
-            return const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Center(
-                  child: Text(
-                "Empty, no exams added yest , you can start adding by clicking plus button",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-              )),
-            );
+            return const DefaultEmptyWidget(
+                msg:
+                    "Empty, no exams added yet , you can start adding by clicking plus button");
           }
         }
 
@@ -118,10 +109,12 @@ class _ExamsScreenState extends State<ExamsScreen> {
                         context, Routes.examsQuestionStudentRoute,
                         arguments: currentExam);
                   }
-                }, examItemIndex: index, onDeleteButtonClicked: () {
-
-                examsCubit.deleteExam(currentExam.examId, index);
-              }, deletingItemIndex: examsCubit.currentDeletingExamItemIndex,
+                },
+                examItemIndex: index,
+                // onDeleteButtonClicked: () {
+                //   examsCubit.deleteExam(currentExam.examId, index);
+                // },
+                deletingItemIndex: examsCubit.currentDeletingExamItemIndex,
               );
             },
             itemCount: examsCubit.exams.length,
@@ -159,7 +152,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           CustomEditText(
-                              hint: "Exam title",
+                              hint: AppLocalizations.of(context)!.translate('exam_title')!,
                               validator: (v) {
                                 if (v!.isEmpty) {
                                   return AppStrings.required;
@@ -178,7 +171,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                               Expanded(
                                 flex: 4,
                                 child: CustomButtonWidget(
-                                  text: "Add",
+                                  text: AppLocalizations.of(context)!.translate('add')!,
                                   onPress: () {
 
                                     if (formKey.currentState!.validate()) {
@@ -205,7 +198,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                               Expanded(
                                 flex: 4,
                                 child: CustomButtonWidget(
-                                  text: "cancel",
+                                  text: AppLocalizations.of(context)!.translate('cancel')!,
                                   onPress: () {
                                     examTitleController.clear();
                                     Navigator.pop(context);
@@ -221,8 +214,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
                 ),
               );
             });
-
-
       },
       child: const Icon(Icons.add),
     );
@@ -232,23 +223,21 @@ class _ExamsScreenState extends State<ExamsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Exams"),
+        title: Text(AppLocalizations.of(context)!.translate('exams')!),
         actions: [
-          BlocConsumer<LoginCubit, LoginState>(
-            listener: (context, state) {
-              if (state is LoggingOutComplete) {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, Routes.initialRoute, (route) => false);
+          IconButton(
+            icon: Icon(
+              Icons.translate_outlined,
+              color: AppColors.primary,
+            ),
+            onPressed: () {
+              if (AppLocalizations.of(context)!.isEnLocale) {
+                BlocProvider.of<LocaleCubit>(context).toArabic();
+              } else {
+                BlocProvider.of<LocaleCubit>(context).toEnglish();
               }
             },
-            builder: (context, state) {
-              return IconButton(
-                  onPressed: () {
-                    BlocProvider.of<LoginCubit>(context).logout();
-                  },
-                  icon: const Icon(Icons.logout));
-            },
-          )
+          ),
         ],
       ),
       body: _buildBodyContent(),

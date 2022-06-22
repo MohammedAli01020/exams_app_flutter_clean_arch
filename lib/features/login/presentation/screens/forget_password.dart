@@ -11,6 +11,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../../../config/locale/app_localizations.dart';
+
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({Key? key}) : super(key: key);
@@ -42,7 +44,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Reset password")),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.translate('reset_password')!)),
       body: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is GettingUserByEmailError) {
@@ -86,7 +88,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text("Success updating password", style: TextStyle(color: AppColors.primary),),
-                  CustomButtonWidget(text: "Go to login", onPress: () {
+                  CustomButtonWidget(text: AppLocalizations.of(context)!.translate('go_to_home')!, onPress: () {
                     Navigator.pop(context);
                   },)
                 ],
@@ -111,14 +113,14 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             steps: [
 
               Step(
-                  title: const Text("Enter your email "),
+                  title: Text(AppLocalizations.of(context)!.translate('enter_email')!),
                   content: Form(
                     key: formKeyFirst,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CustomEditText(
-                            hint: "email",
+                            hint: AppLocalizations.of(context)!.translate('email')!,
                             controller: usernameController,
                             inputType: TextInputType.emailAddress,
 
@@ -133,7 +135,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     ),
                   )),
               Step(
-                  title: const Text("Enter the otp code "),
+                  title: Text(AppLocalizations.of(context)!.translate('enter_otp_code')!),
                   content: Form(
                     key: formKeySecond,
                     child: Column(
@@ -158,7 +160,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     ),
                   )),
               Step(
-                  title: const Text("Enter the new password"),
+                  title: Text(AppLocalizations.of(context)!.translate('enter_new_password')!),
                   content: Form(
                     key: formKeyThird,
                     child: Column(

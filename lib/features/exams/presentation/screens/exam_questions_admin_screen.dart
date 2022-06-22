@@ -2,15 +2,18 @@ import 'package:exams_app/core/utils/constants.dart';
 import 'package:exams_app/features/exams/domain/entities/exam.dart';
 import 'package:exams_app/features/exams/domain/use_cases/question_use_cases.dart';
 import 'package:exams_app/features/exams/presentation/cubit/question_cubit.dart';
+import 'package:exams_app/features/exams/presentation/widgets/default_empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../../../config/locale/app_localizations.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/widgets/custom_button_widget.dart';
 import '../../../../core/widgets/custom_edit_text.dart';
 import '../../../../core/widgets/error_item_widget.dart';
+import '../widgets/defaut_deleting_widget.dart';
 
 class ExamQuestionsAdminScreen extends StatefulWidget {
   final Exam exam;
@@ -115,18 +118,8 @@ class ExamQuestionsAdminScreenState extends State<ExamQuestionsAdminScreen> {
               state is QuestionCreatingSuccess ||
               state is DeletingQuestionSuccess) {
             if (cubit.questions.isEmpty) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                    child: Text(
-                  "Empty, no questions added yest , you can start adding by clicking plus button",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                      color: AppColors.primary),
-                )),
-              );
+              return  DefaultEmptyWidget(
+                  msg: AppLocalizations.of(context)!.translate('empty_questions')!);
             }
           }
 
@@ -134,20 +127,7 @@ class ExamQuestionsAdminScreenState extends State<ExamQuestionsAdminScreen> {
           return ListView.builder(
             itemBuilder: (context, index) {
               if (index == cubit.deletingQuestionIndex) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Center(child: CircularProgressIndicator()),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Text("deleting",
-                        style: TextStyle(
-                            color: AppColors.primary, fontSize: 16.0)),
-                  ],
-                );
+                return const DefaultDeletingWidget();
               } else {
                 return Card(
                   child: Container(
@@ -179,11 +159,12 @@ class ExamQuestionsAdminScreenState extends State<ExamQuestionsAdminScreen> {
                             RichText(
                                 text: TextSpan(children: [
                               const TextSpan(
-                                  text: 'The correct choice ',
+                                  text: "The correct choice: ",
                                   style: TextStyle(color: Colors.black)),
                               TextSpan(
                                   text: cubit.questions[index].correctAnswer,
                                   style: const TextStyle(
+                                      fontSize: 25.0,
                                       fontStyle: FontStyle.italic,
                                       color: Colors.green)),
                             ])),
@@ -204,8 +185,6 @@ class ExamQuestionsAdminScreenState extends State<ExamQuestionsAdminScreen> {
             },
             itemCount: cubit.questions.length,
           );
-
-
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -233,7 +212,7 @@ class ExamQuestionsAdminScreenState extends State<ExamQuestionsAdminScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             CustomEditText(
-                                hint: "Question title",
+                                hint: AppLocalizations.of(context)!.translate('question_title')!,
                                 validator: (v) {
                                   if (v!.isEmpty) {
                                     return AppStrings.required;
@@ -244,7 +223,8 @@ class ExamQuestionsAdminScreenState extends State<ExamQuestionsAdminScreen> {
                                 inputType: TextInputType.text),
                             const Divider(),
                             CustomEditText(
-                                hint: "Choice 1 (correct choice)",
+                                hint: AppLocalizations.of(context)!
+                                    .translate('correct_choice')!,
                                 validator: (v) {
                                   if (v!.isEmpty) {
                                     return AppStrings.required;
@@ -254,7 +234,8 @@ class ExamQuestionsAdminScreenState extends State<ExamQuestionsAdminScreen> {
                                 controller: choice1Controller,
                                 inputType: TextInputType.text),
                             CustomEditText(
-                                hint: "Choice 2",
+                                hint: AppLocalizations.of(context)!
+                                    .translate('choice_2')!,
                                 validator: (v) {
                                   if (v!.isEmpty) {
                                     return AppStrings.required;
@@ -264,19 +245,23 @@ class ExamQuestionsAdminScreenState extends State<ExamQuestionsAdminScreen> {
                                 controller: choice2Controller,
                                 inputType: TextInputType.text),
                             CustomEditText(
-                                hint: "Choice 3",
+                                hint: AppLocalizations.of(context)!
+                                    .translate('choice_3')!,
                                 controller: choice3Controller,
                                 inputType: TextInputType.text),
                             CustomEditText(
-                                hint: "Choice 4",
+                                hint: AppLocalizations.of(context)!
+                                    .translate('choice_4')!,
                                 controller: choice4Controller,
                                 inputType: TextInputType.text),
                             CustomEditText(
-                                hint: "Choice 5",
+                                hint: AppLocalizations.of(context)!
+                                    .translate('choice_5')!,
                                 controller: choice5Controller,
                                 inputType: TextInputType.text),
                             CustomEditText(
-                                hint: "Choice 6",
+                                hint: AppLocalizations.of(context)!
+                                    .translate('choice_6')!,
                                 controller: choice6Controller,
                                 inputType: TextInputType.text),
                             const SizedBox(
@@ -287,7 +272,8 @@ class ExamQuestionsAdminScreenState extends State<ExamQuestionsAdminScreen> {
                                 Expanded(
                                   flex: 4,
                                   child: CustomButtonWidget(
-                                    text: "Add",
+                                    text: AppLocalizations.of(context)!
+                                        .translate('add')!,
                                     onPress: () {
                                       if (formKey.currentState!.validate()) {
                                         List<String> choices = [
@@ -337,7 +323,8 @@ class ExamQuestionsAdminScreenState extends State<ExamQuestionsAdminScreen> {
                                 Expanded(
                                   flex: 4,
                                   child: CustomButtonWidget(
-                                    text: "cancel",
+                                    text: AppLocalizations.of(context)!
+                                        .translate('cancel')!,
                                     onPress: () {
                                       _clearControllers();
                                       Navigator.pop(context);

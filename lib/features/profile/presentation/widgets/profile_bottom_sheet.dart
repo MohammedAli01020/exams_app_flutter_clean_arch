@@ -1,6 +1,7 @@
 import 'package:exams_app/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../config/locale/app_localizations.dart';
 import '../../../../core/widgets/custom_button_widget.dart';
 import '../../../../core/widgets/custom_edit_text.dart';
 
@@ -56,7 +57,7 @@ class ProfileBottomSheet extends StatelessWidget {
                     Expanded(
                       flex: 4,
                       child: CustomButtonWidget(
-                        text: "update",
+                        text: AppLocalizations.of(context)!.translate('update')!,
                         onPress: onUpdatePressedCallback,
                       ),
                     ),
@@ -66,7 +67,7 @@ class ProfileBottomSheet extends StatelessWidget {
                     Expanded(
                       flex: 4,
                       child: CustomButtonWidget(
-                        text: "cancel",
+                        text: AppLocalizations.of(context)!.translate('cancel')!,
                         onPress: () {
                           Navigator.pop(context);
                         },

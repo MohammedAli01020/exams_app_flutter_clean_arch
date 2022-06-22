@@ -1,3 +1,4 @@
+import 'package:exams_app/core/error/exceptions.dart';
 import 'package:exams_app/features/exams/data/models/question_model.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -21,15 +22,21 @@ class QuestionRemoteDataSourceImpl implements QuestionRemoteDataSource {
   @override
   Future<QuestionModel> addQuestion(
       int examId, QuestionParam questionParam) async {
-    final response = await apiConsumer
-        .post(EndPoints.addQuestion + examId.toString(), body: {
-      "answers": questionParam.answers,
-      "correctAnswer": questionParam.correctAnswer,
-      "title": questionParam.title,
-      "creationDateTime": questionParam.creationDateTime
-    });
 
-    return QuestionModel.fromJson(response);
+    try {
+      final response = await apiConsumer
+          .post(EndPoints.addQuestion + examId.toString(), body: {
+        "answers": questionParam.answers,
+        "correctAnswer": questionParam.correctAnswer,
+        "title": questionParam.title,
+        "creationDateTime": questionParam.creationDateTime
+      });
+
+      return QuestionModel.fromJson(response);
+    } catch (e) {
+      throw const ServerException();
+    }
+
   }
 
   @override
@@ -52,10 +59,17 @@ class QuestionRemoteDataSourceImpl implements QuestionRemoteDataSource {
 
   @override
   Future<List<QuestionModel>> getQuestionByExamId(int examId) async {
-    final response = await apiConsumer
-        .get(EndPoints.allQuestion, queryParameters: {"examId": examId});
 
-    return List<QuestionModel>.from(
-        response.map((x) => QuestionModel.fromJson(x)));
+    try {
+      final response = await apiConsumer
+          .get(EndPoints.allQuestion, queryParameters: {"examId": examId});
+
+      return List<QuestionModel>.from(
+          response.map((x) => QuestionModel.fromJson(x)));
+    } catch (e) {
+      throw const ServerException();
+    }
+
+
   }
 }

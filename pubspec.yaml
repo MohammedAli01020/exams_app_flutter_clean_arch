@@ -19,6 +19,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  flutter_localizations:
+    sdk: flutter
+
   flutter_lints: ^1.0.0
   cupertino_icons: ^1.0.2
   fluttertoast: ^8.0.9
@@ -42,7 +45,9 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
-
+  assets:
+    - lang/ar.json
+    - lang/en.json
 
   fonts:
     - family: Tajawal

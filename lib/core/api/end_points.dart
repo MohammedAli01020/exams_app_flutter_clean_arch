@@ -7,7 +7,7 @@ class EndPoints {
   static const String login = '${baseUrl}login';
   static const String getAllExams = '${baseUrl}api/exams/all';
   static const String createExam = '${baseUrl}api/exams/create';
-  static const String deleteExam = '${baseUrl}api/delete/';
+  static const String deleteExam = '${baseUrl}api/exams/delete/';
 
   // questions
 

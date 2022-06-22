@@ -71,7 +71,8 @@ class ExamsCubit extends Cubit<ExamsState> {
 
     Either<Failure, Exam> response = await examUseCases.createExam(examParam);
 
-    if (response is! Failure) {
+    if (response.isRight()) {
+
       Exam exam = response.getOrElse(() {
         throw const ServerException();
       });

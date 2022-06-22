@@ -14,6 +14,11 @@ import 'package:exams_app/features/exams/domain/use_cases/user_exam_use_cases.da
 import 'package:exams_app/features/exams/presentation/cubit/exams_cubit.dart';
 import 'package:exams_app/features/exams/presentation/cubit/question_cubit.dart';
 import 'package:exams_app/features/exams/presentation/cubit/user_exam_cubit.dart';
+import 'package:exams_app/features/login/data/data_sources/lang_local_data_source.dart';
+import 'package:exams_app/features/login/data/repositories/lang_respository_impl.dart';
+import 'package:exams_app/features/login/domain/repositories/lang_repository.dart';
+import 'package:exams_app/features/login/domain/use_cases/lang_use_cases.dart';
+import 'package:exams_app/features/login/presentation/cubit/lang/locale_cubit.dart';
 import 'package:exams_app/features/profile/data/data_sources/profile_remote_data_source.dart';
 import 'package:exams_app/features/profile/data/repositories/profile_respository_impl.dart';
 import 'package:exams_app/features/profile/domain/repositories/profile_repository.dart';
@@ -50,6 +55,7 @@ Future<void> init() async {
       loginUseCases: sl()));
 
 
+  sl.registerFactory(() => LocaleCubit(langUseCases: sl()));
 
   // Use cases
 
@@ -65,6 +71,10 @@ Future<void> init() async {
 
   sl.registerLazySingleton<ProfileUseCases>(
           () => ProfileUseCasesImpl(profileRepository: sl()));
+
+
+  sl.registerLazySingleton<LangUseCases>(
+          () => LangUseCasesImpl(langRepository: sl()));
 
   // Repository
 
@@ -87,6 +97,8 @@ Future<void> init() async {
   sl.registerLazySingleton<ProfileRepository>(() => ProfileRepositoryImpl(
       profileRemoteDataSource: sl(), networkInfo: sl()));
 
+  sl.registerLazySingleton<LangRepository>(() => LangRepositoryImpl(langLocalDataSource: sl()));
+
   // Data Sources
 
   sl.registerLazySingleton<LoginLocalDataSource>(
@@ -107,6 +119,10 @@ Future<void> init() async {
 
   sl.registerLazySingleton<ProfileRemoteDataSource>(
           () => ProfileRemoteDataSourceImpl(apiConsumer: sl()));
+
+
+  sl.registerLazySingleton<LangLocalDataSource>(
+          () => LangLocalDataSourceImpl(sharedPreferences: sl()));
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(

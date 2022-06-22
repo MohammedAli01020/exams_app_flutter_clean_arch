@@ -1,6 +1,7 @@
 import 'package:exams_app/features/exams/domain/entities/user_exam.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../config/locale/app_localizations.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/constants.dart';
 
@@ -31,13 +32,13 @@ class ExamResultListItem extends StatelessWidget {
             color: Colors.white,
           ),
 
-          Text("Correct: " + currentUserExam.correct.toString(),
+          Text(AppLocalizations.of(context)!.translate('correct')! + currentUserExam.correct.toString(),
             style: TextStyle(color: AppColors.green),),
-          Text("Incorrect: " + currentUserExam.incorrect.toString(),
+          Text(AppLocalizations.of(context)!.translate('incorrect')! +  currentUserExam.incorrect.toString(),
               style:  TextStyle(color: AppColors.red)
           ),
 
-          Text("Score: ${currentUserExam.correct} / ${currentUserExam.fullScore} ",
+          Text(AppLocalizations.of(context)!.translate('score')! +  "${currentUserExam.correct} / ${currentUserExam.fullScore} ",
               style : const TextStyle(color: Colors.white)),
 
 
@@ -49,12 +50,12 @@ class ExamResultListItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Student: " + currentUserExam.userDetails.username.toString(),
+              Text(AppLocalizations.of(context)!.translate('student')! + currentUserExam.userDetails.username.toString(),
                 style: const TextStyle(color: Colors.white, fontSize: 18.0),),
 
-              Text("Teacher: " + currentUserExam.exam.userDetails.username.toString(),
+              Text(AppLocalizations.of(context)!.translate('teacher')! + currentUserExam.exam.userDetails.username.toString(),
                 style: const TextStyle(color: Colors.white, fontSize: 18.0),),
-              Text("Submitted at: " + Constants.dateFromMilliSeconds(currentUserExam.submittedDate),
+              Text(AppLocalizations.of(context)!.translate('submitted_at')!  + Constants.dateFromMilliSeconds(currentUserExam.submittedDate),
                   style: const TextStyle(color: Colors.white, fontSize: 18.0)),
             ],
           )

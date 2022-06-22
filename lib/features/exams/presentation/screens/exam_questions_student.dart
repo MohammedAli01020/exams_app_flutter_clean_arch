@@ -1,16 +1,19 @@
 import 'package:exams_app/core/utils/constants.dart';
 import 'package:exams_app/core/widgets/custom_button_widget.dart';
+import 'package:exams_app/features/exams/domain/entities/quiz_state.dart';
 import 'package:exams_app/features/exams/domain/use_cases/user_exam_use_cases.dart';
 import 'package:exams_app/features/exams/presentation/cubit/question_cubit.dart';
 import 'package:exams_app/features/exams/presentation/cubit/user_exam_cubit.dart';
+import 'package:exams_app/features/exams/presentation/widgets/question_student_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../../../config/locale/app_localizations.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widgets/error_item_widget.dart';
 import '../../domain/entities/exam.dart';
-import '../widgets/answer_card.dart';
+import '../widgets/default_empty_widget.dart';
 
 class ExamsQuestionsStudentScreen extends StatefulWidget {
   final Exam exam;
@@ -85,18 +88,7 @@ class ExamsQuestionsStudentScreenState
 
           if (state is LoadingQuestionsSuccess) {
             if (cubit.questions.isEmpty) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                    child: Text(
-                  "Empty, no questions added yest , you can start adding by clicking plus button",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                      color: AppColors.primary),
-                )),
-              );
+              return const DefaultEmptyWidget(msg: "Empty, no questions added yest , you can start adding by clicking plus button",);
             }
           }
 
@@ -107,44 +99,9 @@ class ExamsQuestionsStudentScreenState
               ),
             );
           } else if (completed) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "Score: ${cubit.quizState.correct.length.toString()} / ${cubit.questions.length.toString()}",
-                    style: TextStyle(fontSize: 25.0, color: AppColors.primary),
-                  ),
-                  const SizedBox(
-                    height: 16.0,
-                  ),
-                  Text(
-                    "Correct: ${cubit.quizState.correct.length}",
-                    style: TextStyle(color: AppColors.green),
-                  ),
-                  const SizedBox(
-                    height: 16.0,
-                  ),
-                  Text("Incorrect: ${cubit.quizState.incorrect.length}",
-                      style: TextStyle(color: AppColors.red)),
-                  const SizedBox(
-                    height: 16.0,
-                  ),
-                  Text(
-                      "NotAnswered: ${(cubit.questions.length - (cubit.quizState.correct.length + cubit.quizState.incorrect.length))}",
-                      style: TextStyle(color: AppColors.hint)),
-                  const SizedBox(
-                    height: 16.0,
-                  ),
-                  CustomButtonWidget(
-                    text: "Go to home",
-                    onPress: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              ),
-            );
+            return ExamCompletedWidget(
+                quizState: cubit.quizState,
+                questionLength: cubit.questions.length);
           } else {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,7 +132,7 @@ class ExamsQuestionsStudentScreenState
                             ),
                             Flexible(
                                 child: Text(
-                              "You have solved this exam before with score ( ${state.userExam.correct} / ${state.userExam.fullScore} )",
+                                  AppLocalizations.of(context)!.translate('solved_before')! + "( ${state.userExam.correct} / ${state.userExam.fullScore} )",
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             )),
@@ -191,48 +148,21 @@ class ExamsQuestionsStudentScreenState
                     return const LinearProgressIndicator();
                   },
                 ),
+
+
                 Expanded(
                   child: PageView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     controller: boardController,
                     itemBuilder: (context, index) {
                       final currentQuestion = cubit.questions[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16.0, horizontal: 16),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              Text(
-                                currentQuestion.title,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.0,
-                                    color: AppColors.primary),
-                              ),
-                              const SizedBox(height: 16.0),
-                              const Divider(),
-                              Column(
-                                children: currentQuestion.answers.map((e) {
-                                  return AnswerCard(
-                                      answer: e,
-                                      isSelected:
-                                          e == cubit.quizState.selectedAnswer,
-                                      isCorrect:
-                                          e == currentQuestion.correctAnswer,
-                                      isDisplayingAnswer:
-                                          cubit.quizState.answered,
-                                      onTap: () {
-                                        cubit.submitAnswer(currentQuestion, e);
-                                      });
-                                }).toList(),
-                              ),
-                              Text(currentQuestion.answers.toString()),
-                              Text(currentQuestion.correctAnswer.toString()),
-                            ],
-                          ),
-                        ),
-                      );
+
+                      return QuestionStudentListItem(
+                          currentQuestion: currentQuestion,
+                          quizState: cubit.quizState,
+                          onTap: (e) {
+                            cubit.submitAnswer(currentQuestion, e);
+                          });
                     },
                     onPageChanged: (value) {
                       if (value == cubit.questions.length - 1) {
@@ -248,6 +178,8 @@ class ExamsQuestionsStudentScreenState
                     itemCount: cubit.questions.length,
                   ),
                 ),
+
+
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: FloatingActionButton(
@@ -297,3 +229,58 @@ class ExamsQuestionsStudentScreenState
     );
   }
 }
+
+class ExamCompletedWidget extends StatelessWidget {
+  final QuizState quizState;
+  final int questionLength;
+
+  const ExamCompletedWidget(
+      {Key? key, required this.quizState, required this.questionLength})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+          AppLocalizations.of(context)!.translate('score')! + "${quizState.correct.length.toString()} / ${questionLength.toString()}",
+            style: TextStyle(fontSize: 25.0, color: AppColors.primary),
+          ),
+          const SizedBox(
+            height: 16.0,
+          ),
+          Text(
+            AppLocalizations.of(context)!.translate('correct')! + "${quizState.correct.length}",
+            style: TextStyle(color: AppColors.green),
+          ),
+          const SizedBox(
+            height: 16.0,
+          ),
+          Text(AppLocalizations.of(context)!.translate('incorrect')! +  "${quizState.incorrect.length}",
+              style: TextStyle(color: AppColors.red)),
+          const SizedBox(
+            height: 16.0,
+          ),
+          Text(
+              AppLocalizations.of(context)!.translate('not_answered')! + "${(questionLength - (quizState.correct.length + quizState.incorrect.length))}",
+              style: TextStyle(color: AppColors.hint)),
+          const SizedBox(
+            height: 16.0,
+          ),
+          CustomButtonWidget(
+            text: AppLocalizations.of(context)!.translate('go_to_home')!,
+            onPress: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
+      ),
+    );
+  }
+}
+
+
+
+

@@ -1,11 +1,13 @@
 import 'package:exams_app/core/utils/app_strings.dart';
 import 'package:exams_app/core/utils/constants.dart';
 import 'package:exams_app/features/exams/presentation/cubit/user_exam_cubit.dart';
+import 'package:exams_app/features/exams/presentation/widgets/default_empty_widget.dart';
 import 'package:exams_app/features/exams/presentation/widgets/exam_result_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../../../config/locale/app_localizations.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widgets/error_item_widget.dart';
 
@@ -47,7 +49,9 @@ class _ExamsResultsScreenState extends State<ExamsResultsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Constants.currentUser!.role == AppStrings.adminRole ? "Students exam results" :"My exams results"),
+        title: Text(Constants.currentUser!.role == AppStrings.adminRole ?
+        AppLocalizations.of(context)!.translate('my_exams_results')! :
+        AppLocalizations.of(context)!.translate('students_exams_results')!),
       ),
       body: BlocConsumer<UserExamCubit, UserExamState>(
         listener: (context, state) {
@@ -83,17 +87,7 @@ class _ExamsResultsScreenState extends State<ExamsResultsScreen> {
 
 
             if (state.usersExamList.isEmpty) {
-
-              return  Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                    child: Text(
-                      "Empty, you did not solve any exams yes!",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: AppColors.primary),
-                    )),
-              );
-
+              return const DefaultEmptyWidget(msg: "Empty, you did not solve any exams yet!");
             }
 
             return ListView.builder(
