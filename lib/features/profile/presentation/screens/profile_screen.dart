@@ -66,14 +66,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
 
           if (state is UpdatingPasswordSuccess) {
+
             Constants.showToast(
                 msg: "UpdatingPasswordSuccess", color: AppColors.green);
           }
+
+
+          if (state is UpdatingUsernameError) {
+            Constants.showErrorDialog(context: context, msg: "UpdatingUsernameError");
+          }
+
+          if (state is UpdatingPasswordError) {
+
+            Constants.showErrorDialog(context: context, msg: "UpdatingPasswordError");
+          }
+          
+          
         },
         builder: (context, state) {
           final cubit = ProfileCubit.get(context);
 
-          if (state is GettingProfileData || state is UpdatingUsername) {
+          if (state is GettingProfileData || 
+              state is UpdatingUsername || 
+              state is UpdatingPassword) {
             return Center(
               child: SpinKitFadingCircle(
                 color: AppColors.primary,
@@ -90,28 +105,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }
 
-          if (state is UpdatingUsernameError) {
-            return ErrorItemWidget(
-              msg: state.msg,
-              onPress: () {
-                _updateUsername(widget.userId, emailController.text.trim());
-              },
-            );
-          }
 
-          if (state is UpdatingPasswordError) {
-            return ErrorItemWidget(
-              msg: state.msg,
-              onPress: () {
-                _updatePassword(widget.userId, passwordController.text.trim());
-              },
-            );
-          }
-
-          if (state is GettingProfileDataSuccess ||
-              state is UpdatingUsernameSuccess ||
-              state is UpdatingPasswordSuccess) {
-            return ListView(
+          return SingleChildScrollView(
+            child: Column(
               children: [
                 Stack(
                   clipBehavior: Clip.none,
@@ -140,9 +136,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             radius: 50.0,
                             child: ClipOval(
                                 child: Image.network(
-                              "https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png",
-                              fit: BoxFit.cover,
-                            )),
+                                  "https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png",
+                                  fit: BoxFit.cover,
+                                )),
                           ),
                         ),
                       ),
@@ -223,12 +219,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 )
               ],
-            );
-          }
-
-          return Center(
-            child: SpinKitFadingCircle(
-              color: AppColors.primary,
             ),
           );
         },

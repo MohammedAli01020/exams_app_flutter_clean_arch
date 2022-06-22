@@ -3,6 +3,7 @@ import 'package:exams_app/core/utils/constants.dart';
 import 'package:exams_app/features/login/presentation/cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:exams_app/core/utils/app_strings.dart';
 
 import '../../config/locale/app_localizations.dart';
 
@@ -38,7 +39,9 @@ class CustomDrawer extends StatelessWidget {
               Navigator.pushNamed(context, Routes.examsResultsRoute);
             },
             title: Text(
-              AppLocalizations.of(context)!.translate('exams_results')!,
+              Constants.currentUser!.role == AppStrings.adminRole ?
+              AppLocalizations.of(context)!.translate('students_exams_results')! :
+              AppLocalizations.of(context)!.translate('my_exams_results')!
             ),
             leading: const Icon(Icons.edit),
           ),

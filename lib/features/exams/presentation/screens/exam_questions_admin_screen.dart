@@ -27,10 +27,11 @@ class ExamQuestionsAdminScreen extends StatefulWidget {
 }
 
 class ExamQuestionsAdminScreenState extends State<ExamQuestionsAdminScreen> {
+
   var formKey = GlobalKey<FormState>();
+
   TextEditingController questionTitleController = TextEditingController();
   TextEditingController examTitleController = TextEditingController();
-
   TextEditingController choice1Controller = TextEditingController();
   TextEditingController choice2Controller = TextEditingController();
   TextEditingController choice3Controller = TextEditingController();
@@ -44,7 +45,6 @@ class ExamQuestionsAdminScreenState extends State<ExamQuestionsAdminScreen> {
 
     questionTitleController.dispose();
     examTitleController.dispose();
-
     choice1Controller.dispose();
     choice2Controller.dispose();
     choice3Controller.dispose();
@@ -114,77 +114,75 @@ class ExamQuestionsAdminScreenState extends State<ExamQuestionsAdminScreen> {
             );
           }
 
-          if (state is LoadingQuestionsSuccess ||
-              state is QuestionCreatingSuccess ||
-              state is DeletingQuestionSuccess) {
-            if (cubit.questions.isEmpty) {
-              return  DefaultEmptyWidget(
-                  msg: AppLocalizations.of(context)!.translate('empty_questions')!);
-            }
+          if (cubit.questions.isEmpty) {
+            return  DefaultEmptyWidget(
+                msg: AppLocalizations.of(context)!.translate('empty_questions')!);
+          } else {
+
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                if (index == cubit.deletingQuestionIndex) {
+                  return const DefaultDeletingWidget();
+                } else {
+                  return Card(
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            cubit.questions[index].title.toString(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                                color: AppColors.primary),
+                          ),
+                          const SizedBox(
+                            height: 16.0,
+                          ),
+                          Text(
+                            cubit.questions[index].answers.toString(),
+                            style: TextStyle(
+                                color: AppColors.primary, fontSize: 18.0),
+                          ),
+                          const SizedBox(
+                            height: 16.0,
+                          ),
+                          Row(
+                            children: [
+                              RichText(
+                                  text: TextSpan(children: [
+                                    const TextSpan(
+                                        text: "The correct choice: ",
+                                        style: TextStyle(color: Colors.black)),
+                                    TextSpan(
+                                        text: cubit.questions[index].correctAnswer,
+                                        style: const TextStyle(
+                                            fontSize: 25.0,
+                                            fontStyle: FontStyle.italic,
+                                            color: Colors.green)),
+                                  ])),
+                              const Spacer(),
+                              IconButton(
+                                  onPressed: () {
+                                    cubit.deleteQuestion(
+                                        cubit.questions[index].questionId, index);
+                                  },
+                                  icon: const Icon(Icons.delete)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              },
+              itemCount: cubit.questions.length,
+            );
           }
 
 
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              if (index == cubit.deletingQuestionIndex) {
-                return const DefaultDeletingWidget();
-              } else {
-                return Card(
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          cubit.questions[index].title.toString(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
-                              color: AppColors.primary),
-                        ),
-                        const SizedBox(
-                          height: 16.0,
-                        ),
-                        Text(
-                          cubit.questions[index].answers.toString(),
-                          style: TextStyle(
-                              color: AppColors.primary, fontSize: 18.0),
-                        ),
-                        const SizedBox(
-                          height: 16.0,
-                        ),
-                        Row(
-                          children: [
-                            RichText(
-                                text: TextSpan(children: [
-                              const TextSpan(
-                                  text: "The correct choice: ",
-                                  style: TextStyle(color: Colors.black)),
-                              TextSpan(
-                                  text: cubit.questions[index].correctAnswer,
-                                  style: const TextStyle(
-                                      fontSize: 25.0,
-                                      fontStyle: FontStyle.italic,
-                                      color: Colors.green)),
-                            ])),
-                            const Spacer(),
-                            IconButton(
-                                onPressed: () {
-                                  cubit.deleteQuestion(
-                                      cubit.questions[index].questionId, index);
-                                },
-                                icon: const Icon(Icons.delete)),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }
-            },
-            itemCount: cubit.questions.length,
-          );
         },
       ),
       floatingActionButton: FloatingActionButton(

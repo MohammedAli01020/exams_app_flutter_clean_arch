@@ -50,8 +50,9 @@ class _ExamsResultsScreenState extends State<ExamsResultsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(Constants.currentUser!.role == AppStrings.adminRole ?
-        AppLocalizations.of(context)!.translate('my_exams_results')! :
-        AppLocalizations.of(context)!.translate('students_exams_results')!),
+        AppLocalizations.of(context)!.translate('students_exams_results')! :
+        AppLocalizations.of(context)!.translate('my_exams_results')!
+        ),
       ),
       body: BlocConsumer<UserExamCubit, UserExamState>(
         listener: (context, state) {

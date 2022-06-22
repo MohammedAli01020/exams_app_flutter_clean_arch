@@ -22,6 +22,7 @@ class CustomButtonWidget extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(50))),
         child: Text(text,
+          textAlign: TextAlign.center,
           style: const TextStyle(
               color: Colors.white,
               fontSize: 20,

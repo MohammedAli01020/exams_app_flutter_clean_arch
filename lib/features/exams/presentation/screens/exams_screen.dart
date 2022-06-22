@@ -16,7 +16,6 @@ import '../../../../core/utils/app_strings.dart';
 import '../../../../core/widgets/custom_button_widget.dart';
 import '../../../../core/widgets/custom_edit_text.dart';
 import '../../../login/presentation/cubit/lang/locale_cubit.dart';
-import '../../../login/presentation/cubit/login_cubit.dart';
 
 class ExamsScreen extends StatefulWidget {
   const ExamsScreen({Key? key}) : super(key: key);
@@ -80,46 +79,53 @@ class _ExamsScreenState extends State<ExamsScreen> {
           );
         }
 
-        if (state is LoadingRefreshExamsCompleted ||
-            state is ExamCreated ||
-            state is ExamDeleted ) {
-          if (examsCubit.exams.isEmpty) {
-            return const DefaultEmptyWidget(
-                msg:
-                    "Empty, no exams added yet , you can start adding by clicking plus button");
-          }
+
+        if (examsCubit.exams.isEmpty) {
+          debugPrint("examsCubit.exams.isEmpty");
+          return const DefaultEmptyWidget(
+              msg:
+              "Empty, no exams added yet , you can start adding by clicking plus button");
+        } else {
+          debugPrint("examsCubit.exams.is not Empty");
+          return RefreshIndicator(
+            onRefresh: () async {
+              _getExams(refresh: true);
+            },
+            child: Scrollbar(
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                controller: _controller,
+                itemBuilder: (context, index) {
+                  final currentExam = examsCubit.exams[index];
+
+                  return ExamListItem(
+                    exam: currentExam,
+                    onTap: () {
+                      if (Constants.currentUser!.role == AppStrings.adminRole) {
+                        Navigator.pushNamed(
+                            context, Routes.examsQuestionsAdminRoute,
+                            arguments: currentExam);
+                      } else {
+                        Navigator.pushNamed(
+                            context, Routes.examsQuestionStudentRoute,
+                            arguments: currentExam);
+                      }
+                    },
+                    examItemIndex: index,
+                    // onDeleteButtonClicked: () {
+                    //   examsCubit.deleteExam(currentExam.examId, index);
+                    // },
+                    deletingItemIndex: examsCubit.currentDeletingExamItemIndex,
+                  );
+                },
+                itemCount: examsCubit.exams.length,
+              ),
+            ),
+          );
         }
 
-        return Scrollbar(
-          child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            controller: _controller,
-            itemBuilder: (context, index) {
-              final currentExam = examsCubit.exams[index];
 
-              return ExamListItem(
-                exam: currentExam,
-                onTap: () {
-                  if (Constants.currentUser!.role == AppStrings.adminRole) {
-                    Navigator.pushNamed(
-                        context, Routes.examsQuestionsAdminRoute,
-                        arguments: currentExam);
-                  } else {
-                    Navigator.pushNamed(
-                        context, Routes.examsQuestionStudentRoute,
-                        arguments: currentExam);
-                  }
-                },
-                examItemIndex: index,
-                // onDeleteButtonClicked: () {
-                //   examsCubit.deleteExam(currentExam.examId, index);
-                // },
-                deletingItemIndex: examsCubit.currentDeletingExamItemIndex,
-              );
-            },
-            itemCount: examsCubit.exams.length,
-          ),
-        );
+
       },
     );
   }
